@@ -15,18 +15,21 @@ export type Database = {
           dimension: Database["public"]["Enums"]["mbti_dimension"]
           id: number
           question_text: string
+          question_text_ar: string
         }
         Insert: {
           created_at?: string
           dimension: Database["public"]["Enums"]["mbti_dimension"]
           id?: number
           question_text: string
+          question_text_ar?: string
         }
         Update: {
           created_at?: string
           dimension?: Database["public"]["Enums"]["mbti_dimension"]
           id?: number
           question_text?: string
+          question_text_ar?: string
         }
         Relationships: []
       }
@@ -104,6 +107,30 @@ export type Database = {
           t_score?: number
           type_result?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      mbti_type_details: {
+        Row: {
+          description_ar: string
+          description_en: string
+          recommended_majors_ar: string[]
+          recommended_majors_en: string[]
+          type_code: string
+        }
+        Insert: {
+          description_ar: string
+          description_en: string
+          recommended_majors_ar: string[]
+          recommended_majors_en: string[]
+          type_code: string
+        }
+        Update: {
+          description_ar?: string
+          description_en?: string
+          recommended_majors_ar?: string[]
+          recommended_majors_en?: string[]
+          type_code?: string
         }
         Relationships: []
       }

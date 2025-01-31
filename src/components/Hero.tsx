@@ -15,9 +15,9 @@ const Hero = () => {
       login: "Login"
     },
     ar: {
-      title: "اكتشف",
-      titleSpan: "تخصصك المثالي",
-      description: "استخدم التحليل المدعوم بالذكاء الاصطناعي وتقنية التعرف على الوجه لإيجاد المسار الأكاديمي الذي يناسب إمكاناتك الفريدة.",
+      title: "اكتشف شخصيتك",
+      titleSpan: "اكتشف تخصصك",
+      description: "مرحبا بكم في موقعنا حيث نوفر الاختبارالقادر علي تحليل شخصيتكم وتخصصكم بدقة",
       getStarted: "ابدأ الآن",
       login: "تسجيل الدخول"
     }
@@ -44,7 +44,7 @@ const Hero = () => {
           <p className="text-xl mb-8 text-yellow-50">
             {currentContent.description}
           </p>
-          <div className="space-x-4">
+          <div className={`space-x-4 ${language === 'ar' ? 'space-x-reverse' : ''}`}>
             <Button
               onClick={() => navigate("/register")}
               className="bg-white text-secondary hover:bg-yellow-50 px-8 py-6 text-lg"

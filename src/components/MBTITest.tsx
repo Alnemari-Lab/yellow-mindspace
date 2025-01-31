@@ -9,6 +9,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface Question {
   id: number;
   question_text: string;
+  question_text_ar: string;
   dimension: string;
 }
 
@@ -175,9 +176,10 @@ const MBTITest = () => {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
+  const questionText = language === 'ar' ? currentQuestion.question_text_ar : currentQuestion.question_text;
 
   return (
-    <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
+    <div className="min-h-screen hero-gradient flex items-center justify-center p-4" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <Card className="w-full max-w-2xl p-6 space-y-6">
         <div className="text-center">
           <p className="text-sm text-gray-500">
@@ -185,7 +187,7 @@ const MBTITest = () => {
           </p>
         </div>
         <h2 className="text-xl text-center font-semibold">
-          {currentQuestion.question_text}
+          {questionText}
         </h2>
         <div className="flex justify-center gap-4">
           <Button

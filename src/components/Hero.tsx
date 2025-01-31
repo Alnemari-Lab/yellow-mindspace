@@ -32,6 +32,11 @@ const Hero = () => {
       
       <div className="relative container mx-auto px-4 h-screen flex items-center">
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+          <img 
+            src="/lovable-uploads/86e84181-dd17-4c70-9995-ae29aa4a690d.png" 
+            alt="Brain Icon" 
+            className="w-24 h-24 mx-auto mb-8"
+          />
           <h1 className="text-7xl font-bold mb-6 text-gray-900 tracking-tight">
             {currentContent.title}
             <span className="block text-secondary mt-2">{currentContent.titleSpan}</span>

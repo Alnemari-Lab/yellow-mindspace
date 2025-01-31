@@ -9,6 +9,104 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      mbti_questions: {
+        Row: {
+          created_at: string
+          dimension: Database["public"]["Enums"]["mbti_dimension"]
+          id: number
+          question_text: string
+        }
+        Insert: {
+          created_at?: string
+          dimension: Database["public"]["Enums"]["mbti_dimension"]
+          id?: number
+          question_text: string
+        }
+        Update: {
+          created_at?: string
+          dimension?: Database["public"]["Enums"]["mbti_dimension"]
+          id?: number
+          question_text?: string
+        }
+        Relationships: []
+      }
+      mbti_responses: {
+        Row: {
+          created_at: string
+          id: string
+          question_id: number
+          response: boolean
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          question_id: number
+          response: boolean
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          question_id?: number
+          response?: boolean
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mbti_responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "mbti_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mbti_results: {
+        Row: {
+          created_at: string
+          e_score: number
+          f_score: number
+          i_score: number
+          id: string
+          j_score: number
+          n_score: number
+          p_score: number
+          s_score: number
+          t_score: number
+          type_result: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          e_score: number
+          f_score: number
+          i_score: number
+          id?: string
+          j_score: number
+          n_score: number
+          p_score: number
+          s_score: number
+          t_score: number
+          type_result: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          e_score?: number
+          f_score?: number
+          i_score?: number
+          id?: string
+          j_score?: number
+          n_score?: number
+          p_score?: number
+          s_score?: number
+          t_score?: number
+          type_result?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -41,7 +139,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      mbti_dimension: "EI" | "SN" | "TF" | "JP"
     }
     CompositeTypes: {
       [_ in never]: never

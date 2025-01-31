@@ -109,11 +109,11 @@ const RegisterForm = () => {
 
       toast({
         title: "Success",
-        description: "Registration successful! Please check your email to verify your account.",
+        description: "Registration successful! Please proceed to the MBTI test.",
       });
 
-      // Navigate to login page after successful registration
-      navigate("/login");
+      // Navigate to MBTI test after successful registration
+      navigate("/mbti-test");
     } catch (error) {
       console.error("Registration error:", error);
       toast({

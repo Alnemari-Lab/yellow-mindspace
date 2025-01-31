@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
 
 interface MBTIResult {
   type_result: string;
@@ -31,12 +32,13 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { toast } = useToast();
 
   const translations = {
     en: {
       title: "Your MBTI Results",
       loading: "Loading your results...",
-      noResults: "No results available. Please take the test first.",
+      noResults: "No results available. Redirecting to MBTI test...",
       personality: "Your personality type is:",
       scores: "Detailed Scores",
       description: "Type Description",
@@ -46,7 +48,7 @@ const Dashboard = () => {
     ar: {
       title: "نتائج MBTI الخاصة بك",
       loading: "جاري تحميل النتائج...",
-      noResults: "لا توجد نتائج متاحة. يرجى إجراء الاختبار أولاً.",
+      noResults: "لا توجد نتائج متاحة. جاري التوجيه إلى اختبار MBTI...",
       personality: "نوع شخصيتك هو:",
       scores: "النتائج التفصيلية",
       description: "وصف الشخصية",
@@ -80,12 +82,23 @@ const Dashboard = () => {
 
         if (resultError) {
           console.error('Error fetching results:', resultError);
+          toast({
+            title: "Error",
+            description: "Failed to fetch your results",
+            variant: "destructive",
+          });
           return;
         }
 
-        // If no results found, redirect to MBTI test
+        // If no results found, show toast and redirect to MBTI test
         if (!resultData) {
-          navigate('/mbti-test');
+          toast({
+            title: "No Results Found",
+            description: t.noResults,
+          });
+          setTimeout(() => {
+            navigate('/mbti-test');
+          }, 2000);
           return;
         }
 
@@ -113,7 +126,7 @@ const Dashboard = () => {
 
     checkAuth();
     fetchResults();
-  }, [navigate]);
+  }, [navigate, t.noResults, toast]);
 
   const handleRetakeTest = () => {
     navigate('/mbti-test');

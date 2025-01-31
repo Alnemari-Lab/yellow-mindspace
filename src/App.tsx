@@ -8,6 +8,7 @@ import LanguageToggle from "./components/LanguageToggle";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import RegisterForm from "./components/RegisterForm";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
                 <RegisterForm />
               </div>
             } />
+            <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

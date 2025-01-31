@@ -56,9 +56,8 @@ const Features = () => {
           {currentFeatures.map((feature, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 floating"
+              className="relative bg-white rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300"
               style={{ 
-                animationDelay: `${index * 0.2}s`,
                 background: 'linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%)'
               }}
             >

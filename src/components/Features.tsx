@@ -7,34 +7,34 @@ const Features = () => {
   const features = {
     en: [
       {
-        icon: <Lightbulb className="w-12 h-12 text-primary" />,
+        icon: <Lightbulb className="w-12 h-12 text-secondary" />,
         title: "Smart Analysis",
         description: "AI-powered assessment of your interests and strengths"
       },
       {
-        icon: <Brain className="w-12 h-12 text-primary" />,
+        icon: <Brain className="w-12 h-12 text-secondary" />,
         title: "Personalized Recommendations",
         description: "Get major suggestions tailored to your unique profile"
       },
       {
-        icon: <GraduationCap className="w-12 h-12 text-primary" />,
+        icon: <GraduationCap className="w-12 h-12 text-secondary" />,
         title: "Future Planning",
         description: "Explore career paths and university options"
       }
     ],
     ar: [
       {
-        icon: <Lightbulb className="w-12 h-12 text-primary" />,
+        icon: <Lightbulb className="w-12 h-12 text-secondary" />,
         title: "تحليل ذكي",
         description: "تقييم مدعوم بالذكاء الاصطناعي لاهتماماتك ونقاط قوتك"
       },
       {
-        icon: <Brain className="w-12 h-12 text-primary" />,
+        icon: <Brain className="w-12 h-12 text-secondary" />,
         title: "توصيات مخصصة",
         description: "احصل على اقتراحات تخصص مصممة خصيصًا لملفك الشخصي"
       },
       {
-        icon: <GraduationCap className="w-12 h-12 text-primary" />,
+        icon: <GraduationCap className="w-12 h-12 text-secondary" />,
         title: "تخطيط المستقبل",
         description: "استكشف المسارات المهنية وخيارات الجامعات"
       }
@@ -52,7 +52,7 @@ const Features = () => {
               key={index}
               className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
               style={{ 
-                background: 'linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%)'
+                background: 'linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%)'
               }}
             >
               <div className="mb-6 flex justify-center">{feature.icon}</div>

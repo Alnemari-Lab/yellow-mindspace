@@ -10,25 +10,25 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 196 100% 50%;
+    --primary: 45 93% 47%;  /* Yellow */
     --primary-foreground: 0 0% 100%;
-    --secondary: 24 95% 53%;
+    --secondary: 24 95% 53%;  /* Orange */
     --secondary-foreground: 0 0% 100%;
-    --muted: 210 40% 96.1%;
+    --muted: 45 20% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 196 100% 50%;
+    --accent: 45 93% 47%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 196 100% 50%;
+    --ring: 45 93% 47%;
     --radius: 1rem;
   }
 }
 
 .hero-gradient {
-  background: linear-gradient(to right, #ffffff, #f8f8f8);
+  background: linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%);
 }
 
 .abstract-shape {
@@ -39,21 +39,14 @@
   position: absolute;
   border-radius: 50%;
   opacity: 0.1;
-  animation: pulse 4s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); opacity: 0.1; }
-  50% { transform: scale(1.2); opacity: 0.2; }
-  100% { transform: scale(1); opacity: 0.1; }
 }
 
 .btn-gradient {
-  background: linear-gradient(90deg, #0099ff 0%, #00b3ff 100%);
+  background: linear-gradient(90deg, #f59e0b 0%, #f97316 100%);
   transition: all 0.3s ease;
 }
 
 .btn-gradient:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 15px rgba(0, 153, 255, 0.2);
+  box-shadow: 0 8px 15px rgba(245, 158, 11, 0.2);
 }

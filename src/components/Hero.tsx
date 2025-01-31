@@ -47,14 +47,13 @@ const Hero = () => {
           <div className={`space-x-4 ${language === 'ar' ? 'space-x-reverse' : ''}`}>
             <Button
               onClick={() => navigate("/register")}
-              className="bg-white text-secondary hover:bg-yellow-50 px-8 py-6 text-lg"
+              className="bg-secondary hover:bg-secondary/90 text-white px-8 py-6 text-lg"
             >
               {currentContent.getStarted}
             </Button>
             <Button
               onClick={() => navigate("/login")}
-              variant="outline"
-              className="px-8 py-6 text-lg border-white text-white hover:bg-white/10"
+              className="bg-secondary hover:bg-secondary/90 text-white px-8 py-6 text-lg"
             >
               {currentContent.login}
             </Button>

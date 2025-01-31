@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import RegisterForm from "./components/RegisterForm";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,11 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="/register" element={
+            <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
+              <RegisterForm />
+            </div>
+          } />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

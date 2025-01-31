@@ -20,7 +20,16 @@ const RegisterForm = () => {
 
   return (
     <Card className="w-full max-w-md p-6 shadow-lg">
-      <h2 className="text-2xl font-bold mb-6 text-center">Create Account</h2>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Create Account</h2>
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate("/")}
+          className="text-gray-600 hover:text-gray-900"
+        >
+          Back to Home
+        </Button>
+      </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <Input

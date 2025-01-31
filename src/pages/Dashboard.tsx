@@ -6,6 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const Dashboard = () => {
   const [result, setResult] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { language } = useLanguage();
 
@@ -38,26 +39,48 @@ const Dashboard = () => {
     };
 
     const fetchResults = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return;
+      try {
+        setIsLoading(true);
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) return;
 
-      const { data, error } = await supabase
-        .from('mbti_results')
-        .select('*')
-        .eq('user_id', session.user.id)
-        .single();
+        const { data, error } = await supabase
+          .from('mbti_results')
+          .select('*')
+          .eq('user_id', session.user.id)
+          .single();
 
-      if (error) {
-        console.error('Error fetching results:', error);
-        return;
+        if (error) {
+          console.error('Error fetching results:', error);
+          // If no results found, redirect to MBTI test
+          if (error.code === 'PGRST116') {
+            navigate('/mbti-test');
+            return;
+          }
+          return;
+        }
+
+        setResult(data);
+      } catch (error) {
+        console.error('Error:', error);
+      } finally {
+        setIsLoading(false);
       }
-
-      setResult(data);
     };
 
     checkAuth();
     fetchResults();
   }, [navigate]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen hero-gradient flex items-center justify-center">
+        <Card className="p-6">
+          <p>{t.loading}</p>
+        </Card>
+      </div>
+    );
+  }
 
   if (!result) {
     return (

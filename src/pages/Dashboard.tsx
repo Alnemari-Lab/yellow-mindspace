@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -40,6 +41,7 @@ const Dashboard = () => {
       scores: "Detailed Scores",
       description: "Type Description",
       recommendedMajors: "Recommended Majors",
+      retakeTest: "Retake Test",
     },
     ar: {
       title: "نتائج MBTI الخاصة بك",
@@ -49,6 +51,7 @@ const Dashboard = () => {
       scores: "النتائج التفصيلية",
       description: "وصف الشخصية",
       recommendedMajors: "التخصصات الموصى بها",
+      retakeTest: "إعادة الاختبار",
     }
   };
 
@@ -112,6 +115,10 @@ const Dashboard = () => {
     fetchResults();
   }, [navigate]);
 
+  const handleRetakeTest = () => {
+    navigate('/mbti-test');
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen hero-gradient flex items-center justify-center">
@@ -135,7 +142,12 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-8">
-        <h1 className="text-2xl font-bold text-center mb-6">{t.title}</h1>
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold">{t.title}</h1>
+          <Button onClick={handleRetakeTest} variant="outline">
+            {t.retakeTest}
+          </Button>
+        </div>
         
         <div className="text-center">
           <p className="text-gray-600 mb-2">{t.personality}</p>

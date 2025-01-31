@@ -48,15 +48,16 @@ const Dashboard = () => {
           .from('mbti_results')
           .select('*')
           .eq('user_id', session.user.id)
-          .single();
+          .maybeSingle();
 
         if (error) {
           console.error('Error fetching results:', error);
-          // If no results found, redirect to MBTI test
-          if (error.code === 'PGRST116') {
-            navigate('/mbti-test');
-            return;
-          }
+          return;
+        }
+
+        // If no results found, redirect to MBTI test
+        if (!data) {
+          navigate('/mbti-test');
           return;
         }
 

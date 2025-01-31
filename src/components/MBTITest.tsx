@@ -129,8 +129,8 @@ const MBTITest = () => {
     } else {
       setIsSubmitting(true);
       try {
-        const { user } = await supabase.auth.getUser();
-        if (!user?.id) throw new Error("User not authenticated");
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError || !user) throw new Error("User not authenticated");
 
         // Save individual responses
         const responsesPromise = Object.entries(responses).map(([questionId, response]) => 

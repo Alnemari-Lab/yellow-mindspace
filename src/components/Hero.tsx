@@ -30,45 +30,64 @@ const Hero = () => {
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <div className="w-32 h-32 mx-auto mb-8">
             <svg viewBox="0 0 200 200" className="w-full h-full">
-              {/* Main abstract shape */}
+              {/* Artistic flowing background shape */}
               <path
                 d="M100,20 
-                   C150,20 180,50 170,100 
-                   C160,150 130,170 100,170 
-                   C70,170 40,150 30,100 
-                   C20,50 50,20 100,20"
+                   C160,20 190,60 180,100 
+                   C170,140 130,180 100,180 
+                   C70,180 30,140 20,100 
+                   C10,60 40,20 100,20"
                 fill="#F97316"
-                className="opacity-80"
-              />
-              {/* Abstract neural connections - left */}
-              <path
-                d="M60,60 Q80,90 60,120 Q90,100 60,60"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="3"
-                className="opacity-60"
-              />
-              {/* Abstract neural connections - right */}
-              <path
-                d="M140,60 Q120,90 140,120 Q110,100 140,60"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="3"
-                className="opacity-60"
-              />
-              {/* Central abstract divide */}
-              <path
-                d="M100,30 Q110,100 100,170 M100,30 Q90,100 100,170"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="3"
                 className="opacity-70"
               />
-              {/* Abstract synapses */}
-              <circle cx="70" cy="80" r="4" fill="#F97316" className="opacity-60" />
-              <circle cx="130" cy="80" r="4" fill="#F97316" className="opacity-60" />
-              <circle cx="85" cy="120" r="4" fill="#F97316" className="opacity-60" />
-              <circle cx="115" cy="120" r="4" fill="#F97316" className="opacity-60" />
+              {/* Abstract neural pathways */}
+              <path
+                d="M50,70 
+                   Q80,90 60,120 
+                   Q40,150 70,160 
+                   Q100,170 130,160 
+                   Q160,150 140,120 
+                   Q120,90 150,70"
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="2"
+                className="opacity-50"
+              />
+              {/* Artistic swirls */}
+              <path
+                d="M80,40 
+                   Q100,60 90,80 
+                   Q80,100 90,120 
+                   Q100,140 120,120 
+                   Q140,100 130,80 
+                   Q120,60 140,40"
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="3"
+                className="opacity-60"
+              />
+              {/* Abstract neurons */}
+              <circle cx="70" cy="60" r="3" fill="#F97316" className="opacity-80" />
+              <circle cx="130" cy="60" r="3" fill="#F97316" className="opacity-80" />
+              <circle cx="60" cy="100" r="2" fill="#F97316" className="opacity-70" />
+              <circle cx="140" cy="100" r="2" fill="#F97316" className="opacity-70" />
+              <circle cx="80" cy="140" r="3" fill="#F97316" className="opacity-80" />
+              <circle cx="120" cy="140" r="3" fill="#F97316" className="opacity-80" />
+              {/* Decorative elements */}
+              <path
+                d="M90,30 Q100,50 110,30"
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="2"
+                className="opacity-40"
+              />
+              <path
+                d="M80,170 Q100,150 120,170"
+                fill="none"
+                stroke="#F97316"
+                strokeWidth="2"
+                className="opacity-40"
+              />
             </svg>
           </div>
           <h1 className="text-7xl font-bold mb-6 text-gray-900 tracking-tight">

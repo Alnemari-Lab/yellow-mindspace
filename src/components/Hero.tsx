@@ -1,8 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { language } = useLanguage();
+
+  const content = {
+    en: {
+      title: "Discover Your",
+      titleSpan: "Perfect Major",
+      description: "Use AI-powered analysis and face recognition to find the academic path that matches your unique potential.",
+      getStarted: "Get Started",
+      login: "Login"
+    },
+    ar: {
+      title: "اكتشف",
+      titleSpan: "تخصصك المثالي",
+      description: "استخدم التحليل المدعوم بالذكاء الاصطناعي وتقنية التعرف على الوجه لإيجاد المسار الأكاديمي الذي يناسب إمكاناتك الفريدة.",
+      getStarted: "ابدأ الآن",
+      login: "تسجيل الدخول"
+    }
+  };
+
+  const currentContent = content[language];
 
   return (
     <div className="relative min-h-screen hero-gradient overflow-hidden">
@@ -15,27 +36,27 @@ const Hero = () => {
       
       {/* Main content */}
       <div className="relative container mx-auto px-4 py-32">
-        <div className="max-w-3xl relative z-10">
+        <div className="max-w-3xl relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <h1 className="text-6xl font-bold mb-6 text-white">
-            Discover Your
-            <span className="block text-yellow-100 mt-2">Perfect Major</span>
+            {currentContent.title}
+            <span className="block text-yellow-100 mt-2">{currentContent.titleSpan}</span>
           </h1>
           <p className="text-xl mb-8 text-yellow-50">
-            Use AI-powered analysis and face recognition to find the academic path that matches your unique potential.
+            {currentContent.description}
           </p>
           <div className="space-x-4">
             <Button
               onClick={() => navigate("/register")}
               className="bg-white text-secondary hover:bg-yellow-50 px-8 py-6 text-lg"
             >
-              Get Started
+              {currentContent.getStarted}
             </Button>
             <Button
               onClick={() => navigate("/login")}
               variant="outline"
               className="px-8 py-6 text-lg border-white text-white hover:bg-white/10"
             >
-              Login
+              {currentContent.login}
             </Button>
           </div>
         </div>

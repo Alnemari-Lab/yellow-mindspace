@@ -1,23 +1,47 @@
 import { Lightbulb, Brain, GraduationCap } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Features = () => {
-  const features = [
-    {
-      icon: <Lightbulb className="w-12 h-12 text-secondary" />,
-      title: "Smart Analysis",
-      description: "AI-powered assessment of your interests and strengths"
-    },
-    {
-      icon: <Brain className="w-12 h-12 text-secondary" />,
-      title: "Personalized Recommendations",
-      description: "Get major suggestions tailored to your unique profile"
-    },
-    {
-      icon: <GraduationCap className="w-12 h-12 text-secondary" />,
-      title: "Future Planning",
-      description: "Explore career paths and university options"
-    }
-  ];
+  const { language } = useLanguage();
+
+  const features = {
+    en: [
+      {
+        icon: <Lightbulb className="w-12 h-12 text-secondary" />,
+        title: "Smart Analysis",
+        description: "AI-powered assessment of your interests and strengths"
+      },
+      {
+        icon: <Brain className="w-12 h-12 text-secondary" />,
+        title: "Personalized Recommendations",
+        description: "Get major suggestions tailored to your unique profile"
+      },
+      {
+        icon: <GraduationCap className="w-12 h-12 text-secondary" />,
+        title: "Future Planning",
+        description: "Explore career paths and university options"
+      }
+    ],
+    ar: [
+      {
+        icon: <Lightbulb className="w-12 h-12 text-secondary" />,
+        title: "تحليل ذكي",
+        description: "تقييم مدعوم بالذكاء الاصطناعي لاهتماماتك ونقاط قوتك"
+      },
+      {
+        icon: <Brain className="w-12 h-12 text-secondary" />,
+        title: "توصيات مخصصة",
+        description: "احصل على اقتراحات تخصص مصممة خصيصًا لملفك الشخصي"
+      },
+      {
+        icon: <GraduationCap className="w-12 h-12 text-secondary" />,
+        title: "تخطيط المستقبل",
+        description: "استكشف المسارات المهنية وخيارات الجامعات"
+      }
+    ]
+  };
+
+  const currentFeatures = features[language];
 
   return (
     <div className="py-24 bg-white relative overflow-hidden">
@@ -28,8 +52,8 @@ const Features = () => {
       </div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid md:grid-cols-3 gap-12">
-          {features.map((feature, index) => (
+        <div className="grid md:grid-cols-3 gap-12" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+          {currentFeatures.map((feature, index) => (
             <div
               key={index}
               className="relative bg-white rounded-lg p-8 shadow-xl hover:shadow-2xl transition-all duration-300 floating"

@@ -30,50 +30,45 @@ const Hero = () => {
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <div className="w-32 h-32 mx-auto mb-8">
             <svg viewBox="0 0 200 200" className="w-full h-full">
-              {/* Left hemisphere */}
+              {/* Main abstract shape */}
               <path
-                d="M100,20 C140,20 170,50 170,90 C170,130 140,160 100,160 C60,160 30,130 30,90 C30,50 60,20 100,20 Z"
+                d="M100,20 
+                   C150,20 180,50 170,100 
+                   C160,150 130,170 100,170 
+                   C70,170 40,150 30,100 
+                   C20,50 50,20 100,20"
                 fill="#F97316"
-                className="opacity-90"
+                className="opacity-80"
               />
-              {/* Brain folds - left side */}
+              {/* Abstract neural connections - left */}
               <path
-                d="M85,40 Q95,60 85,80 Q75,100 85,120 Q95,140 85,160"
+                d="M60,60 Q80,90 60,120 Q90,100 60,60"
                 fill="none"
                 stroke="#F97316"
-                strokeWidth="4"
-                className="opacity-70"
+                strokeWidth="3"
+                className="opacity-60"
               />
+              {/* Abstract neural connections - right */}
               <path
-                d="M65,40 Q75,60 65,80 Q55,100 65,120 Q75,140 65,160"
+                d="M140,60 Q120,90 140,120 Q110,100 140,60"
                 fill="none"
                 stroke="#F97316"
-                strokeWidth="4"
-                className="opacity-70"
+                strokeWidth="3"
+                className="opacity-60"
               />
-              {/* Brain folds - right side */}
+              {/* Central abstract divide */}
               <path
-                d="M115,40 Q125,60 115,80 Q105,100 115,120 Q125,140 115,160"
+                d="M100,30 Q110,100 100,170 M100,30 Q90,100 100,170"
                 fill="none"
                 stroke="#F97316"
-                strokeWidth="4"
+                strokeWidth="3"
                 className="opacity-70"
               />
-              <path
-                d="M135,40 Q145,60 135,80 Q125,100 135,120 Q145,140 135,160"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="4"
-                className="opacity-70"
-              />
-              {/* Central divide */}
-              <path
-                d="M100,20 L100,160"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="4"
-                className="opacity-70"
-              />
+              {/* Abstract synapses */}
+              <circle cx="70" cy="80" r="4" fill="#F97316" className="opacity-60" />
+              <circle cx="130" cy="80" r="4" fill="#F97316" className="opacity-60" />
+              <circle cx="85" cy="120" r="4" fill="#F97316" className="opacity-60" />
+              <circle cx="115" cy="120" r="4" fill="#F97316" className="opacity-60" />
             </svg>
           </div>
           <h1 className="text-7xl font-bold mb-6 text-gray-900 tracking-tight">

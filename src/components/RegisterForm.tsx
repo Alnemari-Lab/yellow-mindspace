@@ -4,6 +4,9 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import FaceCapture from "./FaceCapture";
+import { useToast } from "@/components/ui/use-toast";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -11,8 +14,11 @@ const RegisterForm = () => {
     email: "",
     password: "",
   });
+  const [faceImage, setFaceImage] = useState<Blob | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { toast } = useToast();
 
   const translations = {
     en: {
@@ -23,7 +29,9 @@ const RegisterForm = () => {
       password: "Password",
       register: "Register",
       alreadyHaveAccount: "Already have an account?",
-      login: "Login"
+      login: "Login",
+      captureFace: "Capture Face Image",
+      faceRequired: "Please capture your face image",
     },
     ar: {
       createAccount: "إنشاء حساب",
@@ -33,16 +41,88 @@ const RegisterForm = () => {
       password: "كلمة المرور",
       register: "تسجيل",
       alreadyHaveAccount: "لديك حساب بالفعل؟",
-      login: "تسجيل الدخول"
+      login: "تسجيل الدخول",
+      captureFace: "التقاط صورة الوجه",
+      faceRequired: "يرجى التقاط صورة الوجه",
     }
   };
 
   const t = translations[language];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Will implement registration logic after Supabase connection
-    console.log("Registration data:", formData);
+    
+    if (!faceImage) {
+      toast({
+        title: "Error",
+        description: t.faceRequired,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // 1. Register the user
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+
+      if (!authData.user) throw new Error("User registration failed");
+
+      // 2. Upload the face image
+      const fileExt = "jpg";
+      const fileName = `${authData.user.id}.${fileExt}`;
+      
+      const { error: uploadError } = await supabase.storage
+        .from("face_images")
+        .upload(fileName, faceImage, {
+          contentType: "image/jpeg",
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      // 3. Get the public URL of the uploaded image
+      const { data: { publicUrl } } = supabase.storage
+        .from("face_images")
+        .getPublicUrl(fileName);
+
+      // 4. Create the user profile
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .insert({
+          id: authData.user.id,
+          full_name: formData.name,
+          face_image_url: publicUrl,
+        });
+
+      if (profileError) throw profileError;
+
+      toast({
+        title: "Success",
+        description: "Registration successful! Please check your email to verify your account.",
+      });
+
+      // Navigate to login page after successful registration
+      navigate("/login");
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Registration failed. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleFaceCapture = (imageBlob: Blob) => {
+    setFaceImage(imageBlob);
   };
 
   return (
@@ -64,6 +144,7 @@ const RegisterForm = () => {
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
             className="w-full"
+            required
           />
         </div>
         <div>
@@ -73,6 +154,7 @@ const RegisterForm = () => {
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
             className="w-full"
+            required
           />
         </div>
         <div>
@@ -82,10 +164,21 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             className="w-full"
+            required
           />
         </div>
-        <Button type="submit" className="w-full bg-secondary hover:bg-secondary/90">
-          {t.register}
+        <div className="space-y-2">
+          <FaceCapture onCapture={handleFaceCapture} />
+          {faceImage && (
+            <p className="text-sm text-green-600">Face image captured successfully!</p>
+          )}
+        </div>
+        <Button 
+          type="submit" 
+          className="w-full bg-secondary hover:bg-secondary/90"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Registering..." : t.register}
         </Button>
       </form>
       <p className="mt-4 text-center text-sm text-gray-600">

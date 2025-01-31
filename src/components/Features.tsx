@@ -44,16 +44,13 @@ const Features = () => {
   const currentFeatures = features[language];
 
   return (
-    <div className="py-24 bg-white relative">
+    <div className="py-24 bg-gradient-to-b from-[#fff9e6] to-white relative">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-12" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           {currentFeatures.map((feature, index) => (
             <div
               key={index}
-              className="relative bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
-              style={{ 
-                background: 'linear-gradient(135deg, #fff9e6 0%, #fff5d6 100%)'
-              }}
+              className="relative bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="mb-6 flex justify-center">{feature.icon}</div>
               <h3 className="text-xl font-semibold mb-3 text-gray-800">{feature.title}</h3>

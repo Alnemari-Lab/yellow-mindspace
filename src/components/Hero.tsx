@@ -27,33 +27,29 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-screen hero-gradient overflow-hidden">
-      {/* Abstract background shapes */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="abstract-circle w-96 h-96 bg-yellow-100 -top-20 -left-20"></div>
-        <div className="abstract-circle w-72 h-72 bg-orange-100 bottom-20 right-20"></div>
-        <div className="abstract-circle w-64 h-64 bg-amber-100 top-40 right-40"></div>
-      </div>
+      <div className="wave-pattern"></div>
+      <div className="wave-pattern-2"></div>
       
-      {/* Main content */}
-      <div className="relative container mx-auto px-4 py-32">
-        <div className="max-w-3xl relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-          <h1 className="text-6xl font-bold mb-6 text-gray-900">
+      <div className="relative container mx-auto px-4 h-screen flex items-center">
+        <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+          <h1 className="text-7xl font-bold mb-6 text-gray-900 tracking-tight">
             {currentContent.title}
             <span className="block text-secondary mt-2">{currentContent.titleSpan}</span>
           </h1>
-          <p className="text-xl mb-8 text-gray-700">
+          <p className="text-xl mb-12 text-gray-600 max-w-2xl mx-auto leading-relaxed">
             {currentContent.description}
           </p>
           <div className={`space-x-4 ${language === 'ar' ? 'space-x-reverse' : ''}`}>
             <Button
               onClick={() => navigate("/register")}
-              className="bg-secondary hover:bg-secondary/90 text-white px-8 py-6 text-lg"
+              className="btn-gradient text-white px-8 py-6 text-lg font-medium"
             >
               {currentContent.getStarted}
             </Button>
             <Button
               onClick={() => navigate("/login")}
-              className="bg-secondary hover:bg-secondary/90 text-white px-8 py-6 text-lg"
+              variant="outline"
+              className="bg-white/80 hover:bg-white/90 text-gray-800 px-8 py-6 text-lg font-medium border-2 border-gray-200"
             >
               {currentContent.login}
             </Button>

@@ -10,7 +10,7 @@ const Hero = () => {
       <div className="absolute inset-0 overflow-hidden">
         <div className="abstract-circle w-96 h-96 bg-yellow-200 -top-20 -left-20"></div>
         <div className="abstract-circle w-72 h-72 bg-orange-200 bottom-20 right-20"></div>
-        <div className="abstract-circle w-64 h-64 bg-pink-200 top-40 right-40"></div>
+        <div className="abstract-circle w-64 h-64 bg-amber-200 top-40 right-40"></div>
       </div>
       
       {/* Main content */}

@@ -70,17 +70,21 @@ const Dashboard = () => {
 
     const fetchResults = async () => {
       try {
+        console.log('Fetching results...');
         setIsLoading(true);
         const { data: { session } } = await supabase.auth.getSession();
-        if (!session?.user) return;
+        if (!session?.user) {
+          console.log('No session found');
+          return;
+        }
 
-        // Changed from .single() to .maybeSingle() to handle multiple or no results
+        console.log('Fetching MBTI results for user:', session.user.id);
         const { data: resultData, error: resultError } = await supabase
           .from('mbti_results')
           .select('*')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
-          .maybeSingle();
+          .limit(1);
 
         if (resultError) {
           console.error('Error fetching results:', resultError);
@@ -92,7 +96,8 @@ const Dashboard = () => {
           return;
         }
 
-        if (!resultData) {
+        if (!resultData || resultData.length === 0) {
+          console.log('No results found');
           toast({
             title: "No Results Found",
             description: t.noResults,
@@ -103,13 +108,14 @@ const Dashboard = () => {
           return;
         }
 
-        setResult(resultData);
+        console.log('Results found:', resultData[0]);
+        setResult(resultData[0]);
 
         // Fetch type details
         const { data: typeData, error: typeError } = await supabase
           .from('mbti_type_details')
           .select('*')
-          .eq('type_code', resultData.type_result)
+          .eq('type_code', resultData[0].type_result)
           .maybeSingle();
 
         if (typeError) {
@@ -117,6 +123,7 @@ const Dashboard = () => {
           return;
         }
 
+        console.log('Type details found:', typeData);
         setTypeDetails(typeData);
       } catch (error) {
         console.error('Error:', error);

@@ -63,7 +63,7 @@ const RegisterForm = () => {
 
     setIsSubmitting(true);
     try {
-      // 1. Register the user
+      // 1. Register the user and get the session
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -73,7 +73,12 @@ const RegisterForm = () => {
 
       if (!authData.user) throw new Error("User registration failed");
 
-      // 2. Upload the face image
+      // Get the session to use for upload
+      const { data: sessionData } = await supabase.auth.getSession();
+      
+      if (!sessionData.session) throw new Error("No session available");
+
+      // 2. Upload the face image with the session
       const fileExt = "jpg";
       const fileName = `${authData.user.id}.${fileExt}`;
       

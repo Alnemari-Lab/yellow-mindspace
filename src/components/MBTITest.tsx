@@ -133,7 +133,15 @@ const MBTITest = () => {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError || !user) throw new Error("User not authenticated");
 
-        // Save individual responses
+        // First, delete any existing responses for this user
+        const { error: deleteError } = await supabase
+          .from('mbti_responses')
+          .delete()
+          .eq('user_id', user.id);
+
+        if (deleteError) throw deleteError;
+
+        // Then save the new responses
         const responsesPromise = Object.entries(responses).map(([questionId, response]) => 
           supabase
             .from('mbti_responses')
@@ -148,6 +156,16 @@ const MBTITest = () => {
 
         // Calculate and save results
         const result = calculateMBTIType(responses);
+
+        // Delete any existing results for this user
+        const { error: deleteResultError } = await supabase
+          .from('mbti_results')
+          .delete()
+          .eq('user_id', user.id);
+
+        if (deleteResultError) throw deleteResultError;
+
+        // Save new results
         await supabase
           .from('mbti_results')
           .insert({

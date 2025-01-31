@@ -74,10 +74,12 @@ const Dashboard = () => {
         const { data: { session } } = await supabase.auth.getSession();
         if (!session?.user) return;
 
+        // Changed from .single() to .maybeSingle() to handle multiple or no results
         const { data: resultData, error: resultError } = await supabase
           .from('mbti_results')
           .select('*')
           .eq('user_id', session.user.id)
+          .order('created_at', { ascending: false })
           .maybeSingle();
 
         if (resultError) {
@@ -90,7 +92,6 @@ const Dashboard = () => {
           return;
         }
 
-        // If no results found, show toast and redirect to MBTI test
         if (!resultData) {
           toast({
             title: "No Results Found",

@@ -211,7 +211,7 @@ const MBTITest = () => {
           <Button
             onClick={() => handleResponse(true)}
             disabled={isSubmitting}
-            className="w-32"
+            className="w-32 bg-white text-primary hover:bg-primary hover:text-white transition-colors"
           >
             {t.agree}
           </Button>

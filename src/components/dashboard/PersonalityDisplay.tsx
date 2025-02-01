@@ -34,15 +34,17 @@ export const PersonalityDisplay = ({
   return (
     <div className="space-y-8">
       {/* Personality Type Header */}
-      <div className="text-center bg-white/50 rounded-lg p-8 shadow-sm">
+      <div className="text-center bg-white/50 rounded-lg p-8 shadow-sm transform transition-all duration-300 hover:scale-[1.02]">
         <h2 className="text-4xl font-bold text-orange-800 mb-2">{translations.personality}</h2>
-        <p className="text-5xl font-black text-orange-600">{result.type_result}</p>
+        <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
+          {result.type_result}
+        </p>
       </div>
 
       {typeDetails && (
         <>
           {/* Personality Traits Section */}
-          <div className="bg-white/60 rounded-xl p-8 shadow-md">
+          <div className="bg-white/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {translations.personalityTraits}
             </h3>
@@ -52,7 +54,7 @@ export const PersonalityDisplay = ({
           </div>
 
           {/* Major Preferences Text Section */}
-          <div className="bg-white/70 rounded-xl p-8 shadow-md">
+          <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Major Preferences' : 'التخصصات المفضلة'}
             </h3>
@@ -72,7 +74,10 @@ export const PersonalityDisplay = ({
           </div>
 
           {/* First Recommended Majors Grid - Card Style */}
-          <div id="recommended-majors" className="scroll-mt-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg">
+          <div 
+            id="recommended-majors" 
+            className="scroll-mt-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {translations.recommendedMajors}
             </h3>
@@ -83,9 +88,12 @@ export const PersonalityDisplay = ({
                   className="bg-white/90 p-6 rounded-lg shadow-md hover:shadow-xl 
                            transition-all duration-300 hover:scale-105 
                            border border-orange-200 hover:bg-gradient-to-r 
-                           hover:from-orange-50 hover:to-yellow-50"
+                           hover:from-orange-50 hover:to-yellow-50
+                           group cursor-pointer"
                 >
-                  <p className="text-orange-900 text-lg font-semibold">{major}</p>
+                  <p className="text-orange-900 text-lg font-semibold group-hover:text-orange-700 transition-colors">
+                    {major}
+                  </p>
                 </div>
               ))}
             </div>
@@ -103,9 +111,11 @@ export const PersonalityDisplay = ({
                   className="bg-gradient-to-r from-orange-50 to-yellow-50 p-5 rounded-lg 
                            shadow-md hover:shadow-xl transition-all duration-300 
                            hover:scale-105 hover:from-orange-200 hover:to-yellow-200 
-                           border border-orange-200"
+                           border border-orange-200 group cursor-pointer"
                 >
-                  <p className="text-orange-900 text-lg font-semibold">{major}</p>
+                  <p className="text-orange-900 text-lg font-semibold group-hover:text-orange-800 transition-colors">
+                    {major}
+                  </p>
                 </div>
               ))}
             </div>
@@ -123,9 +133,15 @@ export const PersonalityDisplay = ({
                   className="bg-white/40 backdrop-blur-md p-6 rounded-xl 
                            shadow-lg hover:shadow-2xl transition-all duration-300 
                            hover:scale-105 hover:bg-white/60 
-                           border border-white/50"
+                           border border-white/50 group cursor-pointer
+                           animate-fade-in"
+                  style={{
+                    animationDelay: `${index * 100}ms`
+                  }}
                 >
-                  <p className="text-orange-900 text-xl font-bold text-center">{major}</p>
+                  <p className="text-orange-900 text-xl font-bold text-center group-hover:text-orange-700 transition-colors">
+                    {major}
+                  </p>
                 </div>
               ))}
             </div>

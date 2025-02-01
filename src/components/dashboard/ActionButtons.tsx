@@ -1,22 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Wand2, RefreshCw } from "lucide-react";
+import { Wand2, RefreshCw, GraduationCap } from "lucide-react";
 
 interface ActionButtonsProps {
   onRetakeTest: () => void;
   onGetAIAnalysis: () => void;
+  onViewMajors?: () => void;
   isAnalyzing: boolean;
   getAiAnalysisText: string;
   analyzingText: string;
   retakeTestText: string;
+  viewMajorsText?: string;
 }
 
 export const ActionButtons = ({
   onRetakeTest,
   onGetAIAnalysis,
+  onViewMajors,
   isAnalyzing,
   getAiAnalysisText,
   analyzingText,
   retakeTestText,
+  viewMajorsText = "View Majors",
 }: ActionButtonsProps) => {
   return (
     <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
@@ -36,6 +40,15 @@ export const ActionButtons = ({
         <RefreshCw className="mr-2 h-5 w-5" />
         {retakeTestText}
       </Button>
+      {onViewMajors && (
+        <Button
+          onClick={onViewMajors}
+          className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+        >
+          <GraduationCap className="mr-2 h-5 w-5" />
+          {viewMajorsText}
+        </Button>
+      )}
     </div>
   );
 };

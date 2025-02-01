@@ -18,31 +18,17 @@ export const useMBTITest = (questions: Question[]) => {
   const { toast } = useToast();
 
   const calculateMBTIType = (responses: Record<number, boolean>) => {
-    let scores = {
-      E: 0, I: 0,
-      S: 0, N: 0,
-      T: 0, F: 0,
-      J: 0, P: 0
+    const scores = {
+      E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0
     };
 
-    questions.forEach((question) => {
-      const response = responses[question.id];
-      if (response === undefined) return;
+    // Process all responses at once instead of iterating multiple times
+    Object.entries(responses).forEach(([questionId, response]) => {
+      const question = questions.find(q => q.id === Number(questionId));
+      if (!question) return;
 
-      switch (question.dimension) {
-        case 'EI':
-          response ? scores.E++ : scores.I++;
-          break;
-        case 'SN':
-          response ? scores.S++ : scores.N++;
-          break;
-        case 'TF':
-          response ? scores.T++ : scores.F++;
-          break;
-        case 'JP':
-          response ? scores.J++ : scores.P++;
-          break;
-      }
+      const [positive, negative] = question.dimension.split('') as [keyof typeof scores, keyof typeof scores];
+      response ? scores[positive]++ : scores[negative]++;
     });
 
     return {
@@ -52,16 +38,7 @@ export const useMBTITest = (questions: Question[]) => {
         scores.T > scores.F ? 'T' : 'F',
         scores.J > scores.P ? 'J' : 'P'
       ].join(''),
-      scores: {
-        e_score: scores.E,
-        i_score: scores.I,
-        s_score: scores.S,
-        n_score: scores.N,
-        t_score: scores.T,
-        f_score: scores.F,
-        j_score: scores.J,
-        p_score: scores.P
-      }
+      scores
     };
   };
 
@@ -69,61 +46,64 @@ export const useMBTITest = (questions: Question[]) => {
     if (isSubmitting) return;
 
     const currentQuestion = questions[currentQuestionIndex];
-    console.log('Handling response for question:', currentQuestion.id, 'Response:', response);
-    
     setResponses(prev => ({ ...prev, [currentQuestion.id]: response }));
+
+    // If not the last question, just update the index and continue
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+      return;
+    }
+
+    // Only proceed with submission for the last question
     setIsSubmitting(true);
 
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError || !user) {
-        console.error('User authentication error:', userError);
-        throw new Error("User not authenticated");
-      }
+      if (userError || !user) throw new Error("User not authenticated");
 
-      console.log('Authenticated user:', user.id);
+      const updatedResponses = { ...responses, [currentQuestion.id]: response };
+      const result = calculateMBTIType(updatedResponses);
 
-      // Call the stored procedure to handle the response
-      const { error: responseError } = await supabase.rpc('handle_mbti_response', {
-        p_user_id: user.id,
-        p_question_id: currentQuestion.id,
-        p_response: response
-      });
-
-      if (responseError) {
-        console.error('Error saving response:', responseError);
-        throw responseError;
-      }
-
-      // If this was the last question, calculate and save results
-      if (currentQuestionIndex === questions.length - 1) {
-        console.log('Last question answered, calculating results');
-        const result = calculateMBTIType(responses);
-
-        const { error: resultError } = await supabase
-          .from('mbti_results')
-          .upsert({
+      // Batch insert all responses
+      const { error: responsesError } = await supabase
+        .from('mbti_responses')
+        .upsert(
+          Object.entries(updatedResponses).map(([questionId, resp]) => ({
             user_id: user.id,
-            type_result: result.type,
-            ...result.scores
-          }, {
-            onConflict: 'user_id'
-          });
+            question_id: parseInt(questionId),
+            response: resp
+          })),
+          { onConflict: 'user_id,question_id' }
+        );
 
-        if (resultError) {
-          console.error('Error saving results:', resultError);
-          throw resultError;
-        }
+      if (responsesError) throw responsesError;
 
-        navigate('/dashboard');
-      } else {
-        setCurrentQuestionIndex(prev => prev + 1);
-      }
+      // Save final results
+      const { error: resultError } = await supabase
+        .from('mbti_results')
+        .upsert({
+          user_id: user.id,
+          type_result: result.type,
+          e_score: result.scores.E,
+          i_score: result.scores.I,
+          s_score: result.scores.S,
+          n_score: result.scores.N,
+          t_score: result.scores.T,
+          f_score: result.scores.F,
+          j_score: result.scores.J,
+          p_score: result.scores.P
+        }, {
+          onConflict: 'user_id'
+        });
+
+      if (resultError) throw resultError;
+
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error in handleResponse:', error);
       toast({
         title: "Error",
-        description: "Failed to save your response. Please try again.",
+        description: "Failed to save your responses. Please try again.",
         variant: "destructive",
       });
     } finally {

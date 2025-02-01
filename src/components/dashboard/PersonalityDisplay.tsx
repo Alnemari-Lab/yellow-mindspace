@@ -52,11 +52,16 @@ export const PersonalityDisplay = ({
 
           <div className="bg-white/50 rounded-lg p-6 shadow-sm">
             <h3 className="text-xl font-semibold mb-4">{translations.recommendedMajors}</h3>
-            <ul className="list-disc list-inside space-y-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                <li key={index} className="text-gray-700 text-lg">{major}</li>
+                <div 
+                  key={index} 
+                  className="bg-white/70 p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200"
+                >
+                  <p className="text-gray-700 text-lg font-medium">{major}</p>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         </>
       )}

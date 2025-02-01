@@ -89,32 +89,6 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          {/* First Recommended Majors Grid - Card Style */}
-          <div 
-            id="recommended-majors" 
-            className="scroll-mt-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl"
-          >
-            <h3 className="text-2xl font-bold text-orange-800 mb-6">
-              {translations.recommendedMajors}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                <div
-                  key={index}
-                  className="bg-white/90 p-6 rounded-lg shadow-md hover:shadow-xl 
-                           transition-all duration-300 hover:scale-105 
-                           border border-orange-200 hover:bg-gradient-to-r 
-                           hover:from-orange-50 hover:to-yellow-50
-                           group cursor-pointer"
-                >
-                  <p className="text-orange-900 text-lg font-semibold group-hover:text-orange-700 transition-colors">
-                    {major}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
           {/* Modern Glass Style Display */}
           <div className="mt-8 bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
             <h3 className="text-3xl font-bold text-orange-800 mb-8 text-center">

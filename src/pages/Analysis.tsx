@@ -160,27 +160,104 @@ const Analysis = () => {
                   {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
                 </h3>
                 <div className="text-lg leading-relaxed text-gray-700">
-                  {language === 'en' ? (
-                    <>
-                      <p className="mb-4">As a {personalityType} personality type, your key strengths include:</p>
-                      <ul className="list-disc pl-6 space-y-2">
+                  <ul className="list-disc pl-6 space-y-2">
+                    {language === 'en' ? (
+                      <>
                         <li>Strong analytical and problem-solving abilities</li>
                         <li>Natural leadership qualities</li>
                         <li>Excellent communication skills</li>
                         <li>Creative thinking and innovation</li>
-                      </ul>
-                    </>
-                  ) : (
-                    <>
-                      <p className="mb-4">كشخصية من نوع {personalityType}، تتضمن نقاط قوتك الرئيسية:</p>
-                      <ul className="list-disc pl-6 space-y-2">
+                      </>
+                    ) : (
+                      <>
                         <li>قدرات تحليلية وحل المشكلات قوية</li>
                         <li>صفات قيادية طبيعية</li>
                         <li>مهارات تواصل ممتازة</li>
                         <li>التفكير الإبداعي والابتكار</li>
-                      </ul>
-                    </>
-                  )}
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Areas to Improve' : 'مجالات للتحسين'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    {language === 'en' ? (
+                      <>
+                        <li>Time management and organization</li>
+                        <li>Emotional intelligence and empathy</li>
+                        <li>Stress management</li>
+                        <li>Active listening skills</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>إدارة الوقت والتنظيم</li>
+                        <li>الذكاء العاطفي والتعاطف</li>
+                        <li>إدارة التوتر</li>
+                        <li>مهارات الاستماع النشط</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطوير الشخصي'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  <ul className="list-disc pl-6 space-y-2">
+                    {language === 'en' ? (
+                      <>
+                        <li>Practice mindfulness and self-reflection daily</li>
+                        <li>Set clear goals and create action plans</li>
+                        <li>Seek feedback from peers and mentors</li>
+                        <li>Engage in continuous learning</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>ممارسة اليقظة الذهنية والتأمل الذاتي يومياً</li>
+                        <li>وضع أهداف واضحة وإنشاء خطط عمل</li>
+                        <li>طلب التغذية الراجعة من الزملاء والموجهين</li>
+                        <li>المشاركة في التعلم المستمر</li>
+                      </>
+                    )}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Social Interaction Style' : 'نمط التفاعل الاجتماعي'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  <p className="mb-4">
+                    {language === 'en' 
+                      ? `As a ${personalityType}, your social interaction style is characterized by:`
+                      : `كشخصية من نوع ${personalityType}، يتميز أسلوب تفاعلك الاجتماعي بـ:`
+                    }
+                  </p>
+                  <ul className="list-disc pl-6 space-y-2">
+                    {language === 'en' ? (
+                      <>
+                        <li>Preference for meaningful one-on-one conversations</li>
+                        <li>Strong ability to read social cues</li>
+                        <li>Natural networking abilities</li>
+                        <li>Diplomatic communication style</li>
+                      </>
+                    ) : (
+                      <>
+                        <li>تفضيل المحادثات الهادفة وجهاً لوجه</li>
+                        <li>قدرة قوية على قراءة الإشارات الاجتماعية</li>
+                        <li>قدرات طبيعية في التواصل الشبكي</li>
+                        <li>أسلوب تواصل دبلوماسي</li>
+                      </>
+                    )}
+                  </ul>
                 </div>
               </div>
             </>

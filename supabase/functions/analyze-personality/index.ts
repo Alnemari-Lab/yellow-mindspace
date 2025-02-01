@@ -34,37 +34,34 @@ serve(async (req) => {
          5. Skills to develop
          Provide a detailed and helpful response.`;
 
-    console.log('Making request to DeepSeek API...');
-    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+    console.log('Making request to Ollama API...');
+    const response = await fetch('http://localhost:11434/api/generate', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Analyze ${personalityType} personality type` }
-        ],
-        temperature: 0.7,
+        model: "mistral",
+        prompt: `${systemPrompt}\n\nAnalyze ${personalityType} personality type`,
+        stream: false
       })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('DeepSeek API error:', errorData);
-      throw new Error(`DeepSeek API error: ${errorData.error?.message || 'Unknown error'}`);
+      console.error('Ollama API error:', errorData);
+      throw new Error(`Ollama API error: ${errorData.error || 'Unknown error'}`);
     }
 
     const data = await response.json();
-    console.log('DeepSeek response received');
+    console.log('Ollama response received');
 
-    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Invalid response format from DeepSeek API');
+    if (!data.response) {
+      throw new Error('Invalid response format from Ollama API');
     }
 
     return new Response(JSON.stringify({
-      analysis: data.choices[0].message.content
+      analysis: data.response
     }), {
       headers: {
         ...corsHeaders,

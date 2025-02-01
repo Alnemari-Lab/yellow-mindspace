@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Wand2, RefreshCw } from "lucide-react";
+import { ProfileHeader } from "@/components/dashboard/ProfileHeader";
+import { ActionButtons } from "@/components/dashboard/ActionButtons";
+import { PersonalityDisplay } from "@/components/dashboard/PersonalityDisplay";
 
 interface Profile {
   full_name: string;
@@ -15,14 +15,6 @@ interface Profile {
 
 interface MBTIResult {
   type_result: string;
-  e_score: number;
-  i_score: number;
-  s_score: number;
-  n_score: number;
-  t_score: number;
-  f_score: number;
-  j_score: number;
-  p_score: number;
 }
 
 interface TypeDetails {
@@ -89,7 +81,6 @@ const Dashboard = () => {
           return;
         }
 
-        // Fetch profile data using maybeSingle() instead of single()
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, face_image_url')
@@ -118,10 +109,9 @@ const Dashboard = () => {
           });
         }
 
-        // Fetch MBTI results
         const { data: resultData, error: resultError } = await supabase
           .from('mbti_results')
-          .select('*')
+          .select('type_result')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
           .limit(1);
@@ -143,7 +133,6 @@ const Dashboard = () => {
           console.log('Results found:', resultData[0]);
           setResult(resultData[0]);
 
-          // Fetch type details
           const { data: typeData, error: typeError } = await supabase
             .from('mbti_type_details')
             .select('*')
@@ -168,7 +157,7 @@ const Dashboard = () => {
     };
 
     fetchUserData();
-  }, [navigate, t.noResults, toast]);
+  }, [navigate, toast]);
 
   const handleRetakeTest = () => {
     navigate('/mbti-test');
@@ -207,59 +196,31 @@ const Dashboard = () => {
     <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-8">
         <div className="flex justify-between items-center">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              <AvatarImage src={profile?.face_image_url || ''} />
-              <AvatarFallback>{profile?.full_name?.charAt(0) || '?'}</AvatarFallback>
-            </Avatar>
-            <div className="text-left">
-              <p className="text-sm text-muted-foreground">{t.welcome}</p>
-              <h2 className="text-2xl font-bold">{profile?.full_name}</h2>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <Button onClick={handleGetAIAnalysis} disabled={isAnalyzing}>
-              <Wand2 className="mr-2 h-4 w-4" />
-              {isAnalyzing ? t.analyzing : t.getAiAnalysis}
-            </Button>
-            <Button onClick={handleRetakeTest} variant="outline">
-              <RefreshCw className="mr-2 h-4 w-4" />
-              {t.retakeTest}
-            </Button>
-          </div>
+          <ProfileHeader
+            fullName={profile?.full_name}
+            imageUrl={profile?.face_image_url}
+            welcomeText={t.welcome}
+          />
+          <ActionButtons
+            onRetakeTest={handleRetakeTest}
+            onGetAIAnalysis={handleGetAIAnalysis}
+            isAnalyzing={isAnalyzing}
+            getAiAnalysisText={t.getAiAnalysis}
+            analyzingText={t.analyzing}
+            retakeTestText={t.retakeTest}
+          />
         </div>
         
-        {result ? (
-          <>
-            <div className="text-center">
-              <p className="text-gray-600 mb-2">{t.personality}</p>
-              <h2 className="text-4xl font-bold text-secondary mb-8">{result.type_result}</h2>
-            </div>
-
-            {typeDetails && (
-              <div className="space-y-6">
-                <div>
-                  <p className="text-gray-700 text-lg leading-relaxed">
-                    {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-semibold mb-4">{t.recommendedMajors}</h3>
-                  <ul className="list-disc list-inside space-y-2 text-gray-700">
-                    {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                      <li key={index} className="text-lg">{major}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center space-y-4">
-            <p>{t.noResults}</p>
-          </div>
-        )}
+        <PersonalityDisplay
+          result={result}
+          typeDetails={typeDetails}
+          language={language}
+          translations={{
+            personality: t.personality,
+            recommendedMajors: t.recommendedMajors,
+            noResults: t.noResults,
+          }}
+        />
       </Card>
     </div>
   );

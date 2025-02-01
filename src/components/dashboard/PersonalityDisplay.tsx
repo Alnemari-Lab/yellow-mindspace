@@ -8,6 +8,7 @@ interface PersonalityDisplayProps {
     recommended_majors_en: string[];
     recommended_majors_ar: string[];
   } | null;
+  aiAnalysis: string | null;
   language: 'en' | 'ar';
   translations: {
     personality: string;
@@ -20,6 +21,7 @@ interface PersonalityDisplayProps {
 export const PersonalityDisplay = ({
   result,
   typeDetails,
+  aiAnalysis,
   language,
   translations,
 }: PersonalityDisplayProps) => {
@@ -43,6 +45,20 @@ export const PersonalityDisplay = ({
 
       {typeDetails && (
         <>
+          {/* AI Analysis Section */}
+          {aiAnalysis && (
+            <div className="bg-white/70 rounded-xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl">
+              <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                {language === 'en' ? 'AI Personality Analysis' : 'تحليل الشخصية بالذكاء الاصطناعي'}
+              </h3>
+              <div className="prose prose-orange max-w-none">
+                <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
+                  {aiAnalysis}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Personality Traits Section */}
           <div className="bg-white/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">

@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [profile, setProfile] = useState<{ full_name: string | null; face_image_url: string | null; } | null>(null);
   const [result, setResult] = useState<{ type_result: string } | null>(null);
+  const [aiAnalysis, setAiAnalysis] = useState<string | null>(null);
   const [typeDetails, setTypeDetails] = useState<{
     description_en: string;
     description_ar: string;
@@ -135,17 +136,46 @@ const Dashboard = () => {
   };
 
   const handleGetAIAnalysis = async () => {
+    if (!result?.type_result) return;
+
     setIsAnalyzing(true);
-    // Implement AI analysis logic here
-    setTimeout(() => {
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-personality', {
+        body: {
+          personalityType: result.type_result,
+          language
+        },
+      });
+
+      if (error) throw error;
+
+      console.log('AI Analysis received:', data);
+      setAiAnalysis(data.analysis);
+      
+      toast({
+        title: language === 'en' ? "Analysis Complete" : "اكتمل التحليل",
+        description: language === 'en' 
+          ? "Your personality analysis is ready!"
+          : "تحليل شخصيتك جاهز!",
+      });
+
+    } catch (error) {
+      console.error('Error getting AI analysis:', error);
+      toast({
+        title: language === 'en' ? "Error" : "خطأ",
+        description: language === 'en'
+          ? "Failed to get AI analysis. Please try again."
+          : "فشل في الحصول على التحليل. يرجى المحاولة مرة أخرى.",
+        variant: "destructive",
+      });
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   const handleViewMajors = () => {
     const element = document.getElementById('recommended-majors');
     if (element) {
-      // Add a small delay to ensure smooth scrolling
       setTimeout(() => {
         element.scrollIntoView({ 
           behavior: 'smooth',
@@ -169,14 +199,12 @@ const Dashboard = () => {
     <div className="min-h-screen hero-gradient">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto space-y-8">
-          {/* Profile Header */}
           <ProfileHeader
             fullName={profile?.full_name}
             imageUrl={profile?.face_image_url}
             welcomeText={translations.welcome}
           />
 
-          {/* Action Buttons */}
           <ActionButtons
             onRetakeTest={handleRetakeTest}
             onGetAIAnalysis={handleGetAIAnalysis}
@@ -188,10 +216,10 @@ const Dashboard = () => {
             viewMajorsText={translations.viewMajors}
           />
 
-          {/* Personality Display */}
           <PersonalityDisplay
             result={result}
             typeDetails={typeDetails}
+            aiAnalysis={aiAnalysis}
             language={language}
             translations={{
               personality: translations.personality,

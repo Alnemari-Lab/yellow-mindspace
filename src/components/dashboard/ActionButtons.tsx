@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Wand2, RefreshCw, GraduationCap } from "lucide-react";
+import { Wand2, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ActionButtonsProps {
@@ -10,7 +10,6 @@ interface ActionButtonsProps {
   getAiAnalysisText: string;
   analyzingText: string;
   retakeTestText: string;
-  viewMajorsText?: string;
 }
 
 export const ActionButtons = ({
@@ -19,16 +18,11 @@ export const ActionButtons = ({
   getAiAnalysisText,
   analyzingText,
   retakeTestText,
-  viewMajorsText = "View Majors",
 }: ActionButtonsProps) => {
   const navigate = useNavigate();
 
   const handleAnalysisClick = () => {
     navigate('/analysis');
-  };
-
-  const handleViewMajorsClick = () => {
-    navigate('/majors');
   };
 
   return (
@@ -48,13 +42,6 @@ export const ActionButtons = ({
       >
         <RefreshCw className="mr-2 h-5 w-5" />
         {retakeTestText}
-      </Button>
-      <Button
-        onClick={handleViewMajorsClick}
-        className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
-      >
-        <GraduationCap className="mr-2 h-5 w-5" />
-        {viewMajorsText}
       </Button>
     </div>
   );

@@ -12,7 +12,6 @@ import Login from "./pages/Login";
 import MBTITest from "./components/MBTITest";
 import Dashboard from "./pages/Dashboard";
 import Analysis from "./pages/Analysis";
-import Majors from "./pages/Majors";
 
 const queryClient = new QueryClient();
 
@@ -35,7 +34,6 @@ const App = () => (
             <Route path="/mbti-test" element={<MBTITest />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/analysis" element={<Analysis />} />
-            <Route path="/majors" element={<Majors />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

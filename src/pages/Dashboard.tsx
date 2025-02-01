@@ -83,6 +83,7 @@ const Dashboard = () => {
           return;
         }
 
+        // Fetch profile data
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, face_image_url')
@@ -102,21 +103,16 @@ const Dashboard = () => {
         if (profileData) {
           console.log('Profile found:', profileData);
           setProfile(profileData);
-        } else {
-          console.log('No profile found for user');
-          toast({
-            title: "Profile Not Found",
-            description: "Unable to load profile information",
-            variant: "destructive",
-          });
         }
 
+        // Fetch MBTI results
         const { data: resultData, error: resultError } = await supabase
           .from('mbti_results')
           .select('type_result')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false })
-          .limit(1);
+          .limit(1)
+          .maybeSingle();
 
         if (resultError) {
           console.error('Error fetching results:', resultError);
@@ -128,17 +124,15 @@ const Dashboard = () => {
           return;
         }
 
-        if (!resultData || resultData.length === 0) {
-          console.log('No results found');
-          setResult(null);
-        } else {
-          console.log('Results found:', resultData[0]);
-          setResult(resultData[0]);
+        console.log('MBTI Result:', resultData);
+        if (resultData) {
+          setResult(resultData);
 
+          // Fetch type details
           const { data: typeData, error: typeError } = await supabase
             .from('mbti_type_details')
             .select('*')
-            .eq('type_code', resultData[0].type_result)
+            .eq('type_code', resultData.type_result)
             .maybeSingle();
 
           if (typeError) {
@@ -146,8 +140,8 @@ const Dashboard = () => {
             return;
           }
 
+          console.log('Type Details:', typeData);
           if (typeData) {
-            console.log('Type details found:', typeData);
             setTypeDetails(typeData);
           }
         }
@@ -160,10 +154,6 @@ const Dashboard = () => {
 
     fetchUserData();
   }, [navigate, toast]);
-
-  const handleRetakeTest = () => {
-    navigate('/mbti-test');
-  };
 
   const handleGetAIAnalysis = async () => {
     setIsAnalyzing(true);

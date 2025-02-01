@@ -23,6 +23,9 @@ export const PersonalityDisplay = ({
   language,
   translations,
 }: PersonalityDisplayProps) => {
+  console.log('PersonalityDisplay - Result:', result);
+  console.log('PersonalityDisplay - Type Details:', typeDetails);
+  
   if (!result) {
     return (
       <div className="text-center space-y-4">

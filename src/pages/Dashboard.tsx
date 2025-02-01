@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { ProfileHeader } from "@/components/dashboard/ProfileHeader";
 import { ActionButtons } from "@/components/dashboard/ActionButtons";
 import { PersonalityDisplay } from "@/components/dashboard/PersonalityDisplay";
@@ -29,6 +31,7 @@ const Dashboard = () => {
     getAIAnalysis: language === 'en' ? 'Get AI Analysis' : 'الحصول على تحليل الذكاء الاصطناعي',
     analyzing: language === 'en' ? 'Analyzing...' : 'جاري التحليل...',
     retakeTest: language === 'en' ? 'Retake Test' : 'إعادة الاختبار',
+    backToHome: language === 'en' ? 'Back to Home' : 'العودة للرئيسية',
     personality: language === 'en' ? 'Your Personality Type' : 'نوع شخصيتك',
     recommendedMajors: language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها',
     noResults: language === 'en' 
@@ -185,6 +188,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen hero-gradient flex flex-col">
       <div className="container mx-auto px-4 py-8 flex-grow">
+        <Button
+          variant="ghost"
+          onClick={() => navigate('/')}
+          className="mb-6 hover:bg-orange-100"
+        >
+          <ArrowLeft className="mr-2 h-5 w-5" />
+          {translations.backToHome}
+        </Button>
+
         <div className="max-w-4xl mx-auto space-y-8">
           <ProfileHeader
             fullName={profile?.full_name}

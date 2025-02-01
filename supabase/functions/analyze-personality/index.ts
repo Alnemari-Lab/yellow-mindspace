@@ -1,15 +1,11 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { corsHeaders } from "../_shared/cors.ts";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+console.log("Personality Analysis Function Started");
 
 serve(async (req) => {
-  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
@@ -23,66 +19,67 @@ serve(async (req) => {
     }
 
     const systemPrompt = language === 'ar' 
-      ? 'أنت مستشار مهني متخصص في تحليل الشخصية. قدم تحليلاً عميقاً ومفصلاً.'
-      : 'You are a professional career counselor specializing in personality analysis. Provide a deep and detailed analysis.';
-
-    const userPrompt = language === 'ar'
-      ? `قم بتحليل نمط الشخصية ${personalityType} مع التركيز على:
-         1. نقاط القوة والضعف الرئيسية
-         2. أسلوب التعلم المفضل
-         3. التحديات المحتملة في الدراسة الجامعية
-         4. نصائح للنجاح الأكاديمي
+      ? `أنت مستشار مهني متخصص في تحليل الشخصية. قم بتحليل نمط الشخصية ${personalityType} وقدم تحليلاً شاملاً يتضمن:
+         1. نقاط القوة الرئيسية
+         2. التحديات المحتملة
+         3. نصائح للتطور الشخصي
+         4. المجالات المهنية المناسبة
          5. المهارات التي يجب تطويرها
          قدم إجابة مفصلة ومفيدة.`
-      : `Analyze the ${personalityType} personality type focusing on:
-         1. Key strengths and weaknesses
-         2. Preferred learning style
-         3. Potential challenges in university studies
-         4. Tips for academic success
+      : `You are a career counselor specializing in personality analysis. Analyze the ${personalityType} personality type and provide a comprehensive analysis including:
+         1. Key strengths
+         2. Potential challenges
+         3. Personal development advice
+         4. Suitable career fields
          5. Skills to develop
          Provide a detailed and helpful response.`;
 
-    console.log('Making request to AI model...');
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    console.log('Making request to DeepSeek API...');
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: "deepseek-chat",
         messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
+          { role: "system", content: systemPrompt },
+          { role: "user", content: `Analyze ${personalityType} personality type` }
         ],
-      }),
+        temperature: 0.7,
+      })
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('AI model API error:', errorData);
-      throw new Error(`AI model API error: ${errorData.error?.message || 'Unknown error'}`);
+      console.error('DeepSeek API error:', errorData);
+      throw new Error(`DeepSeek API error: ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
-    console.log('AI response received');
+    console.log('DeepSeek response received');
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Invalid response format from AI model');
+      throw new Error('Invalid response format from DeepSeek API');
     }
 
-    return new Response(JSON.stringify({ 
-      analysis: data.choices[0].message.content 
+    return new Response(JSON.stringify({
+      analysis: data.choices[0].message.content
     }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
     });
 
   } catch (error) {
-    console.error('Error in analyze-personality function:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message || 'An unexpected error occurred'
-    }), {
+    console.error('Error in personality analysis:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
     });
   }
 });

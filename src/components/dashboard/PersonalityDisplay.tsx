@@ -70,7 +70,10 @@ export const PersonalityDisplay = ({
             </div>
           )}
 
-          <div className="bg-white/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
+          <div 
+            onClick={handleAnalysisClick}
+            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {translations.personalityTraits}
             </h3>
@@ -79,7 +82,10 @@ export const PersonalityDisplay = ({
             </p>
           </div>
 
-          <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
+          <div 
+            onClick={handleAnalysisClick}
+            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
             </h3>
@@ -110,7 +116,10 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
+          <div 
+            onClick={handleAnalysisClick}
+            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Areas for Growth' : 'مجالات التطور'}
             </h3>
@@ -139,7 +148,10 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
+          <div 
+            onClick={handleAnalysisClick}
+            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Career Paths & Major Preferences' : 'المسارات المهنية والتخصصات المفضلة'}
             </h3>
@@ -158,7 +170,10 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
+          <div 
+            onClick={handleAnalysisClick}
+            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
+          >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطور الشخصي'}
             </h3>

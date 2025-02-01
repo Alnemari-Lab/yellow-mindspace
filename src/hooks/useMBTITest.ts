@@ -66,6 +66,8 @@ export const useMBTITest = (questions: Question[]) => {
   };
 
   const handleResponse = async (response: boolean) => {
+    if (isSubmitting) return; // Prevent multiple submissions
+
     const currentQuestion = questions[currentQuestionIndex];
     console.log('Handling response for question:', currentQuestion.id, 'Response:', response);
     
@@ -81,34 +83,16 @@ export const useMBTITest = (questions: Question[]) => {
 
       console.log('Authenticated user:', user.id);
 
-      // First, delete any existing response for this question
-      console.log('Deleting existing response for question:', currentQuestion.id);
-      const { error: deleteError } = await supabase
-        .from('mbti_responses')
-        .delete()
-        .match({ 
-          user_id: user.id,
-          question_id: currentQuestion.id 
-        });
+      // Use a transaction to ensure atomicity
+      const { error: transactionError } = await supabase.rpc('handle_mbti_response', {
+        p_user_id: user.id,
+        p_question_id: currentQuestion.id,
+        p_response: response
+      });
 
-      if (deleteError) {
-        console.error('Error deleting existing response:', deleteError);
-        throw deleteError;
-      }
-
-      // Then insert the new response
-      console.log('Inserting new response');
-      const { error: insertError } = await supabase
-        .from('mbti_responses')
-        .insert({
-          user_id: user.id,
-          question_id: currentQuestion.id,
-          response
-        });
-
-      if (insertError) {
-        console.error('Error inserting response:', insertError);
-        throw insertError;
+      if (transactionError) {
+        console.error('Transaction error:', transactionError);
+        throw transactionError;
       }
 
       // If this was the last question, calculate and save results
@@ -116,24 +100,15 @@ export const useMBTITest = (questions: Question[]) => {
         console.log('Last question answered, calculating results');
         const result = calculateMBTIType(responses);
 
-        // Delete existing results
-        const { error: deleteResultError } = await supabase
-          .from('mbti_results')
-          .delete()
-          .eq('user_id', user.id);
-
-        if (deleteResultError) {
-          console.error('Error deleting existing results:', deleteResultError);
-          throw deleteResultError;
-        }
-
-        // Save new results
+        // Save results in a transaction
         const { error: resultError } = await supabase
           .from('mbti_results')
-          .insert({
+          .upsert({
             user_id: user.id,
             type_result: result.type,
             ...result.scores
+          }, {
+            onConflict: 'user_id'
           });
 
         if (resultError) {

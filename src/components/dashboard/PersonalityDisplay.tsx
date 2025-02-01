@@ -87,40 +87,6 @@ export const PersonalityDisplay = ({
             className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
           >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
-              {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
-            </h3>
-            <div className="grid gap-4">
-              <div className="text-lg leading-relaxed text-gray-700">
-                {language === 'en' ? (
-                  <>
-                    <p className="mb-4">As a {result.type_result} personality type, your key strengths include:</p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>Strong analytical and problem-solving abilities</li>
-                      <li>Natural leadership qualities</li>
-                      <li>Excellent communication skills</li>
-                      <li>Creative thinking and innovation</li>
-                    </ul>
-                  </>
-                ) : (
-                  <>
-                    <p className="mb-4">كشخصية من نوع {result.type_result}، تتضمن نقاط قوتك الرئيسية:</p>
-                    <ul className="list-disc pl-6 space-y-2">
-                      <li>قدرات تحليلية وحل المشكلات قوية</li>
-                      <li>صفات قيادية طبيعية</li>
-                      <li>مهارات تواصل ممتازة</li>
-                      <li>التفكير الإبداعي والابتكار</li>
-                    </ul>
-                  </>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div 
-            onClick={handleAnalysisClick}
-            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
-          >
-            <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Areas for Growth' : 'مجالات التطور'}
             </h3>
             <div className="text-lg leading-relaxed text-gray-700">

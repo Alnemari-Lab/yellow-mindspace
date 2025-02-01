@@ -67,37 +67,53 @@ export const useMBTITest = (questions: Question[]) => {
 
   const handleResponse = async (response: boolean) => {
     const currentQuestion = questions[currentQuestionIndex];
+    console.log('Handling response for question:', currentQuestion.id, 'Response:', response);
+    
     setResponses(prev => ({ ...prev, [currentQuestion.id]: response }));
+    setIsSubmitting(true);
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      setIsSubmitting(true);
-      try {
-        const { data: { user }, error: userError } = await supabase.auth.getUser();
-        if (userError || !user) throw new Error("User not authenticated");
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) {
+        console.error('User authentication error:', userError);
+        throw new Error("User not authenticated");
+      }
 
-        // Delete existing response for the current question
-        const { error: deleteError } = await supabase
-          .from('mbti_responses')
-          .delete()
-          .eq('user_id', user.id)
-          .eq('question_id', currentQuestion.id);
+      console.log('Authenticated user:', user.id);
 
-        if (deleteError) throw deleteError;
+      // First, delete any existing response for this question
+      console.log('Deleting existing response for question:', currentQuestion.id);
+      const { error: deleteError } = await supabase
+        .from('mbti_responses')
+        .delete()
+        .match({ 
+          user_id: user.id,
+          question_id: currentQuestion.id 
+        });
 
-        // Insert new response
-        const { error: insertError } = await supabase
-          .from('mbti_responses')
-          .insert({
-            user_id: user.id,
-            question_id: currentQuestion.id,
-            response
-          });
+      if (deleteError) {
+        console.error('Error deleting existing response:', deleteError);
+        throw deleteError;
+      }
 
-        if (insertError) throw insertError;
+      // Then insert the new response
+      console.log('Inserting new response');
+      const { error: insertError } = await supabase
+        .from('mbti_responses')
+        .insert({
+          user_id: user.id,
+          question_id: currentQuestion.id,
+          response
+        });
 
-        // Calculate and save results for the last question
+      if (insertError) {
+        console.error('Error inserting response:', insertError);
+        throw insertError;
+      }
+
+      // If this was the last question, calculate and save results
+      if (currentQuestionIndex === questions.length - 1) {
+        console.log('Last question answered, calculating results');
         const result = calculateMBTIType(responses);
 
         // Delete existing results
@@ -106,7 +122,10 @@ export const useMBTITest = (questions: Question[]) => {
           .delete()
           .eq('user_id', user.id);
 
-        if (deleteResultError) throw deleteResultError;
+        if (deleteResultError) {
+          console.error('Error deleting existing results:', deleteResultError);
+          throw deleteResultError;
+        }
 
         // Save new results
         const { error: resultError } = await supabase
@@ -117,19 +136,24 @@ export const useMBTITest = (questions: Question[]) => {
             ...result.scores
           });
 
-        if (resultError) throw resultError;
+        if (resultError) {
+          console.error('Error saving results:', resultError);
+          throw resultError;
+        }
 
         navigate('/dashboard');
-      } catch (error) {
-        console.error('Error saving response:', error);
-        toast({
-          title: "Error",
-          description: "Failed to save your response. Please try again.",
-          variant: "destructive",
-        });
-      } finally {
-        setIsSubmitting(false);
+      } else {
+        setCurrentQuestionIndex(prev => prev + 1);
       }
+    } catch (error) {
+      console.error('Error in handleResponse:', error);
+      toast({
+        title: "Error",
+        description: "Failed to save your response. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

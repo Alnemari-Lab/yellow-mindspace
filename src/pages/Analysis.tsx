@@ -6,6 +6,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
+interface TypeDetails {
+  description_en: string;
+  description_ar: string;
+  recommended_majors_en: string[];
+  recommended_majors_ar: string[];
+}
+
 const Analysis = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -13,6 +20,7 @@ const Analysis = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [personalityType, setPersonalityType] = useState<string | null>(null);
+  const [typeDetails, setTypeDetails] = useState<TypeDetails | null>(null);
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -53,6 +61,20 @@ const Analysis = () => {
         }
 
         setPersonalityType(mbtiData.type_result);
+
+        // Fetch personality type details
+        const { data: detailsData, error: detailsError } = await supabase
+          .from('mbti_type_details')
+          .select('*')
+          .eq('type_code', mbtiData.type_result)
+          .maybeSingle();
+
+        if (detailsError) throw detailsError;
+
+        if (detailsData) {
+          console.log('Fetched type details:', detailsData);
+          setTypeDetails(detailsData);
+        }
 
         // Get AI Analysis
         const { data, error } = await supabase.functions.invoke('analyze-personality', {
@@ -119,6 +141,34 @@ const Analysis = () => {
               <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
                 {personalityType}
               </p>
+            </div>
+          )}
+
+          {typeDetails && (
+            <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+              <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                {language === 'en' ? 'Personality Description' : 'وصف الشخصية'}
+              </h3>
+              <div className="prose prose-orange max-w-none">
+                <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
+                  {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {typeDetails && (
+            <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+              <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                {language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها'}
+              </h3>
+              <div className="space-y-2">
+                {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
+                  <p key={index} className="text-lg text-orange-800">
+                    • {major}
+                  </p>
+                ))}
+              </div>
             </div>
           )}
 

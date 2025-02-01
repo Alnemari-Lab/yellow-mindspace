@@ -10,7 +10,7 @@ const corsHeaders = {
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
@@ -24,7 +24,7 @@ serve(async (req) => {
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-    const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY') ?? '';
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
     const supabase = createClient(supabaseUrl, supabaseKey);
 
     // Fetch personality type details from the database
@@ -60,22 +60,20 @@ serve(async (req) => {
     const analysis = language === 'en'
       ? `Based on your ${personalityType} personality type:
 
-Overview:
 ${typeDetails.description_en}
 
 Recommended Career Paths:
 ${typeDetails.recommended_majors_en.map(major => `• ${major}`).join('\n')}
 
-This comprehensive analysis is based on established MBTI research and can help guide your academic and career choices. Remember that while these insights are generally accurate for your personality type, individual variations are normal and expected. Use this analysis as a starting point for self-reflection and personal development.`
+This analysis is based on your MBTI personality type and our database of career recommendations. Use this information as a starting point for exploring potential career paths that align with your natural strengths and preferences.`
       : `بناءً على نمط شخصيتك ${personalityType}:
 
-نظرة عامة:
 ${typeDetails.description_ar}
 
 المسارات المهنية الموصى بها:
 ${typeDetails.recommended_majors_ar.map(major => `• ${major}`).join('\n')}
 
-يستند هذا التحليل الشامل إلى أبحاث MBTI المعتمدة ويمكن أن يساعد في توجيه خياراتك الأكاديمية والمهنية. تذكر أنه في حين أن هذه الرؤى دقيقة عموماً لنمط شخصيتك، فإن الاختلافات الفردية طبيعية ومتوقعة. استخدم هذا التحليل كنقطة انطلاق للتأمل الذاتي والتطور الشخصي.`;
+يستند هذا التحليل إلى نوع شخصيتك MBTI وقاعدة بياناتنا للتوصيات المهنية. استخدم هذه المعلومات كنقطة انطلاق لاستكشاف المسارات المهنية المحتملة التي تتوافق مع نقاط قوتك وتفضيلاتك الطبيعية.`;
 
     console.log('Analysis generated successfully');
 

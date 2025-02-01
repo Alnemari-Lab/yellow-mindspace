@@ -40,6 +40,7 @@ const Dashboard = () => {
       loading: "Loading your results...",
       noResults: "No results available. Take the MBTI test to see your results!",
       personality: "Your personality type is:",
+      personalityTraits: "Personality Traits",
       recommendedMajors: "Recommended Majors for You",
       retakeTest: "Retake Test",
       welcome: "Welcome",
@@ -51,6 +52,7 @@ const Dashboard = () => {
       loading: "جاري تحميل النتائج...",
       noResults: "لا توجد نتائج متاحة. قم بإجراء اختبار MBTI لرؤية نتائجك!",
       personality: "نوع شخصيتك هو:",
+      personalityTraits: "سمات الشخصية",
       recommendedMajors: "التخصصات الموصى بها لك",
       retakeTest: "إعادة الاختبار",
       welcome: "مرحباً",
@@ -195,14 +197,14 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-8">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center flex-wrap gap-4">
           <ProfileHeader
             fullName={profile?.full_name}
             imageUrl={profile?.face_image_url}
             welcomeText={t.welcome}
           />
           <ActionButtons
-            onRetakeTest={handleRetakeTest}
+            onRetakeTest={() => navigate('/mbti-test')}
             onGetAIAnalysis={handleGetAIAnalysis}
             isAnalyzing={isAnalyzing}
             getAiAnalysisText={t.getAiAnalysis}
@@ -219,6 +221,7 @@ const Dashboard = () => {
             personality: t.personality,
             recommendedMajors: t.recommendedMajors,
             noResults: t.noResults,
+            personalityTraits: t.personalityTraits,
           }}
         />
       </Card>

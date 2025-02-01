@@ -143,9 +143,15 @@ const Dashboard = () => {
   };
 
   const handleViewMajors = () => {
-    const element = document.querySelector('#recommended-majors');
+    const element = document.getElementById('recommended-majors');
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      // Add a small delay to ensure smooth scrolling
+      setTimeout(() => {
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 100);
     }
   };
 
@@ -174,7 +180,7 @@ const Dashboard = () => {
           <ActionButtons
             onRetakeTest={handleRetakeTest}
             onGetAIAnalysis={handleGetAIAnalysis}
-            onViewMajors={handleViewMajors}
+            onViewMajors={result ? handleViewMajors : undefined}
             isAnalyzing={isAnalyzing}
             getAiAnalysisText={translations.getAIAnalysis}
             analyzingText={translations.analyzing}

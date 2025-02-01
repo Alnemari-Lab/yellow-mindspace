@@ -88,32 +88,6 @@ export const PersonalityDisplay = ({
               ))}
             </div>
           </div>
-
-          {/* Modern Glass Style Display */}
-          <div className="mt-8 bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
-            <h3 className="text-3xl font-bold text-orange-800 mb-8 text-center">
-              {translations.recommendedMajors}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                <div 
-                  key={`glass-${index}`}
-                  className="bg-white/40 backdrop-blur-md p-6 rounded-xl 
-                           shadow-lg hover:shadow-2xl transition-all duration-300 
-                           hover:scale-105 hover:bg-white/60 
-                           border border-white/50 group cursor-pointer
-                           animate-fade-in"
-                  style={{
-                    animationDelay: `${index * 100}ms`
-                  }}
-                >
-                  <p className="text-orange-900 text-xl font-bold text-center group-hover:text-orange-700 transition-colors">
-                    {major}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
         </>
       )}
     </div>

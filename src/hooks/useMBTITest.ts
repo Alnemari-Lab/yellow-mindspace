@@ -22,7 +22,6 @@ export const useMBTITest = (questions: Question[]) => {
       E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0
     };
 
-    // Process all responses at once instead of iterating multiple times
     Object.entries(responses).forEach(([questionId, response]) => {
       const question = questions.find(q => q.id === Number(questionId));
       if (!question) return;
@@ -48,13 +47,11 @@ export const useMBTITest = (questions: Question[]) => {
     const currentQuestion = questions[currentQuestionIndex];
     setResponses(prev => ({ ...prev, [currentQuestion.id]: response }));
 
-    // If not the last question, just update the index and continue
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
       return;
     }
 
-    // Only proceed with submission for the last question
     setIsSubmitting(true);
 
     try {
@@ -62,21 +59,17 @@ export const useMBTITest = (questions: Question[]) => {
       if (userError || !user) throw new Error("User not authenticated");
 
       const updatedResponses = { ...responses, [currentQuestion.id]: response };
-      const result = calculateMBTIType(updatedResponses);
 
-      // Batch insert all responses
-      const { error: responsesError } = await supabase
-        .from('mbti_responses')
-        .upsert(
-          Object.entries(updatedResponses).map(([questionId, resp]) => ({
-            user_id: user.id,
-            question_id: parseInt(questionId),
-            response: resp
-          })),
-          { onConflict: 'user_id,question_id' }
-        );
+      // Use the stored procedure to handle responses
+      const { error: responsesError } = await supabase.rpc('handle_mbti_response', {
+        p_user_id: user.id,
+        p_question_id: currentQuestion.id,
+        p_response: response
+      });
 
       if (responsesError) throw responsesError;
+
+      const result = calculateMBTIType(updatedResponses);
 
       // Save final results
       const { error: resultError } = await supabase

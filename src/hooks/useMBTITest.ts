@@ -107,7 +107,7 @@ export const useMBTITest = (questions: Question[]) => {
             type_result: result.type,
             ...result.scores
           }, {
-            onConflict: 'user_id'
+            onConflict: 'mbti_results_user_id_key'
           });
 
         if (resultError) {

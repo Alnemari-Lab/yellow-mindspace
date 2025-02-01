@@ -1,220 +1,165 @@
 import { useEffect, useState } from "react";
-import { Card } from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/components/ui/use-toast";
 import { ProfileHeader } from "@/components/dashboard/ProfileHeader";
 import { ActionButtons } from "@/components/dashboard/ActionButtons";
 import { PersonalityDisplay } from "@/components/dashboard/PersonalityDisplay";
 
-interface Profile {
-  full_name: string;
-  face_image_url: string | null;
-}
-
-interface MBTIResult {
-  type_result: string;
-}
-
-interface TypeDetails {
-  description_en: string;
-  description_ar: string;
-  recommended_majors_en: string[];
-  recommended_majors_ar: string[];
-}
-
 const Dashboard = () => {
-  const [result, setResult] = useState<MBTIResult | null>(null);
-  const [typeDetails, setTypeDetails] = useState<TypeDetails | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const navigate = useNavigate();
-  const { language } = useLanguage();
-  const { toast } = useToast();
+  const [profile, setProfile] = useState<{ full_name: string | null; face_image_url: string | null; } | null>(null);
+  const [result, setResult] = useState<{ type_result: string } | null>(null);
+  const [typeDetails, setTypeDetails] = useState<{
+    description_en: string;
+    description_ar: string;
+    recommended_majors_en: string[];
+    recommended_majors_ar: string[];
+  } | null>(null);
 
+  // Translations
   const translations = {
-    en: {
-      title: "Your MBTI Results",
-      loading: "Loading your results...",
-      noResults: "No results available. Take the MBTI test to see your results!",
-      personality: "Your personality type is:",
-      personalityTraits: "Personality Traits",
-      recommendedMajors: "Recommended Majors for You",
-      retakeTest: "Retake Test",
-      welcome: "Welcome",
-      getAiAnalysis: "Get AI Analysis",
-      analyzing: "Analyzing your profile...",
-    },
-    ar: {
-      title: "نتائج MBTI الخاصة بك",
-      loading: "جاري تحميل النتائج...",
-      noResults: "لا توجد نتائج متاحة. قم بإجراء اختبار MBTI لرؤية نتائجك!",
-      personality: "نوع شخصيتك هو:",
-      personalityTraits: "سمات الشخصية",
-      recommendedMajors: "التخصصات الموصى بها لك",
-      retakeTest: "إعادة الاختبار",
-      welcome: "مرحباً",
-      getAiAnalysis: "تحليل بالذكاء الاصطناعي",
-      analyzing: "جاري تحليل ملفك الشخصي...",
+    welcome: language === 'en' ? 'Welcome back' : 'مرحباً بعودتك',
+    getAIAnalysis: language === 'en' ? 'Get AI Analysis' : 'الحصول على تحليل الذكاء الاصطناعي',
+    analyzing: language === 'en' ? 'Analyzing...' : 'جاري التحليل...',
+    retakeTest: language === 'en' ? 'Retake Test' : 'إعادة الاختبار',
+    personality: language === 'en' ? 'Your Personality Type' : 'نوع شخصيتك',
+    recommendedMajors: language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها',
+    noResults: language === 'en' 
+      ? 'No personality test results found. Take the test to see your results!' 
+      : 'لم يتم العثور على نتائج اختبار الشخصية. قم بإجراء الاختبار لرؤية نتائجك!',
+    personalityTraits: language === 'en' ? 'Personality Traits' : 'سمات الشخصية',
+    error: {
+      loading: language === 'en' ? 'Error loading dashboard data' : 'خطأ في تحميل بيانات لوحة المعلومات',
+      auth: language === 'en' ? 'Please log in to access the dashboard' : 'يرجى تسجيل الدخول للوصول إلى لوحة المعلومات',
     }
   };
 
-  const t = translations[language];
-
   useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate('/login');
-        return;
-      }
-      return session;
-    };
-
-    const fetchUserData = async () => {
+    const fetchDashboardData = async () => {
       try {
-        console.log('Fetching user data...');
-        setIsLoading(true);
-        const session = await checkAuth();
-        if (!session?.user) {
-          console.log('No session found');
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError || !user) {
+          toast({
+            title: "Error",
+            description: translations.error.auth,
+            variant: "destructive",
+          });
+          navigate('/login');
           return;
         }
 
         // Fetch profile data
-        const { data: profileData, error: profileError } = await supabase
+        const { data: profileData } = await supabase
           .from('profiles')
           .select('full_name, face_image_url')
-          .eq('id', session.user.id)
-          .maybeSingle();
-
-        if (profileError) {
-          console.error('Error fetching profile:', profileError);
-          toast({
-            title: "Error",
-            description: "Failed to fetch profile data",
-            variant: "destructive",
-          });
-          return;
-        }
+          .eq('id', user.id)
+          .single();
 
         if (profileData) {
-          console.log('Profile found:', profileData);
           setProfile(profileData);
         }
 
         // Fetch MBTI results
-        const { data: resultData, error: resultError } = await supabase
+        const { data: mbtiData } = await supabase
           .from('mbti_results')
           .select('type_result')
-          .eq('user_id', session.user.id)
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .maybeSingle();
+          .eq('user_id', user.id)
+          .single();
 
-        if (resultError) {
-          console.error('Error fetching results:', resultError);
-          toast({
-            title: "Error",
-            description: "Failed to fetch your results",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        console.log('MBTI Result:', resultData);
-        if (resultData) {
-          setResult(resultData);
-
-          // Fetch type details
-          const { data: typeData, error: typeError } = await supabase
+        if (mbtiData) {
+          setResult(mbtiData);
+          
+          // Fetch type details if we have a result
+          const { data: typeDetailsData } = await supabase
             .from('mbti_type_details')
-            .select('*')
-            .eq('type_code', resultData.type_result)
-            .maybeSingle();
+            .select('description_en, description_ar, recommended_majors_en, recommended_majors_ar')
+            .eq('type_code', mbtiData.type_result)
+            .single();
 
-          if (typeError) {
-            console.error('Error fetching type details:', typeError);
-            return;
-          }
-
-          console.log('Type Details:', typeData);
-          if (typeData) {
-            setTypeDetails(typeData);
+          if (typeDetailsData) {
+            setTypeDetails(typeDetailsData);
           }
         }
+
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching dashboard data:', error);
+        toast({
+          title: "Error",
+          description: translations.error.loading,
+          variant: "destructive",
+        });
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchUserData();
-  }, [navigate, toast]);
+    fetchDashboardData();
+  }, [navigate, toast, translations.error.auth, translations.error.loading]);
+
+  const handleRetakeTest = () => {
+    navigate('/mbti-test');
+  };
 
   const handleGetAIAnalysis = async () => {
     setIsAnalyzing(true);
-    try {
-      toast({
-        title: "Coming Soon",
-        description: "AI analysis feature is coming soon!",
-      });
-    } catch (error) {
-      console.error('AI Analysis error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to generate AI analysis",
-        variant: "destructive",
-      });
-    } finally {
+    // Implement AI analysis logic here
+    setTimeout(() => {
       setIsAnalyzing(false);
-    }
+    }, 2000);
   };
 
   if (isLoading) {
     return (
       <div className="min-h-screen hero-gradient flex items-center justify-center">
-        <Card className="p-6">
-          <p>{t.loading}</p>
-        </Card>
+        <div className="animate-pulse text-2xl font-semibold">
+          Loading...
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
-      <Card className="w-full max-w-4xl p-6 space-y-8">
-        <div className="flex justify-between items-center flex-wrap gap-4">
+    <div className="min-h-screen hero-gradient">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* Profile Header */}
           <ProfileHeader
             fullName={profile?.full_name}
             imageUrl={profile?.face_image_url}
-            welcomeText={t.welcome}
+            welcomeText={translations.welcome}
           />
+
+          {/* Action Buttons */}
           <ActionButtons
-            onRetakeTest={() => navigate('/mbti-test')}
+            onRetakeTest={handleRetakeTest}
             onGetAIAnalysis={handleGetAIAnalysis}
             isAnalyzing={isAnalyzing}
-            getAiAnalysisText={t.getAiAnalysis}
-            analyzingText={t.analyzing}
-            retakeTestText={t.retakeTest}
+            getAiAnalysisText={translations.getAIAnalysis}
+            analyzingText={translations.analyzing}
+            retakeTestText={translations.retakeTest}
+          />
+
+          {/* Personality Display */}
+          <PersonalityDisplay
+            result={result}
+            typeDetails={typeDetails}
+            language={language}
+            translations={{
+              personality: translations.personality,
+              recommendedMajors: translations.recommendedMajors,
+              noResults: translations.noResults,
+              personalityTraits: translations.personalityTraits,
+            }}
           />
         </div>
-        
-        <PersonalityDisplay
-          result={result}
-          typeDetails={typeDetails}
-          language={language}
-          translations={{
-            personality: t.personality,
-            recommendedMajors: t.recommendedMajors,
-            noResults: t.noResults,
-            personalityTraits: t.personalityTraits,
-          }}
-        />
-      </Card>
+      </div>
     </div>
   );
 };

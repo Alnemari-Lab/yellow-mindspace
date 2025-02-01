@@ -19,13 +19,21 @@ export const ActionButtons = ({
   retakeTestText,
 }: ActionButtonsProps) => {
   return (
-    <div className="flex gap-2">
-      <Button onClick={onGetAIAnalysis} disabled={isAnalyzing}>
-        <Wand2 className="mr-2 h-4 w-4" />
+    <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
+      <Button 
+        onClick={onGetAIAnalysis} 
+        disabled={isAnalyzing}
+        className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600"
+      >
+        <Wand2 className="mr-2 h-5 w-5" />
         {isAnalyzing ? analyzingText : getAiAnalysisText}
       </Button>
-      <Button onClick={onRetakeTest} variant="outline">
-        <RefreshCw className="mr-2 h-4 w-4" />
+      <Button 
+        onClick={onRetakeTest} 
+        variant="outline"
+        className="border-orange-200 hover:bg-orange-50"
+      >
+        <RefreshCw className="mr-2 h-5 w-5" />
         {retakeTestText}
       </Button>
     </div>

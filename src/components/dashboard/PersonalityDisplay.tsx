@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 interface PersonalityDisplayProps {
   result: {
     type_result: string;
@@ -25,6 +27,8 @@ export const PersonalityDisplay = ({
   language,
   translations,
 }: PersonalityDisplayProps) => {
+  const navigate = useNavigate();
+
   if (!result) {
     return (
       <div className="text-center p-8 bg-white/50 rounded-lg shadow-sm">
@@ -32,6 +36,10 @@ export const PersonalityDisplay = ({
       </div>
     );
   }
+
+  const handleAnalysisClick = () => {
+    navigate('/analysis');
+  };
 
   return (
     <div className="space-y-8">
@@ -45,9 +53,12 @@ export const PersonalityDisplay = ({
 
       {typeDetails && (
         <>
-          {/* AI Analysis Section */}
+          {/* AI Analysis Section - Now Clickable */}
           {aiAnalysis && (
-            <div className="bg-white/70 rounded-xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl">
+            <div 
+              onClick={handleAnalysisClick}
+              className="bg-white/70 rounded-xl p-8 shadow-lg transform transition-all duration-300 hover:shadow-xl cursor-pointer"
+            >
               <h3 className="text-2xl font-bold text-orange-800 mb-6">
                 {language === 'en' ? 'AI Personality Analysis' : 'تحليل الشخصية بالذكاء الاصطناعي'}
               </h3>
@@ -59,7 +70,6 @@ export const PersonalityDisplay = ({
             </div>
           )}
 
-          {/* Personality Overview Section */}
           <div className="bg-white/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {translations.personalityTraits}
@@ -69,7 +79,6 @@ export const PersonalityDisplay = ({
             </p>
           </div>
 
-          {/* Strengths Section */}
           <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
@@ -101,7 +110,6 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          {/* Areas for Growth Section */}
           <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Areas for Growth' : 'مجالات التطور'}
@@ -131,7 +139,6 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          {/* Career Recommendations Section */}
           <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Career Paths & Major Preferences' : 'المسارات المهنية والتخصصات المفضلة'}
@@ -151,7 +158,6 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          {/* Growth Tips Section */}
           <div className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطور الشخصي'}

@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Wand2, RefreshCw } from "lucide-react";
@@ -47,11 +46,9 @@ const Dashboard = () => {
     en: {
       title: "Your MBTI Results",
       loading: "Loading your results...",
-      noResults: "No results available. Redirecting to MBTI test...",
+      noResults: "No results available. Take the MBTI test to see your results!",
       personality: "Your personality type is:",
-      scores: "Detailed Scores",
-      description: "Type Description",
-      recommendedMajors: "Recommended Majors",
+      recommendedMajors: "Recommended Majors for You",
       retakeTest: "Retake Test",
       welcome: "Welcome",
       getAiAnalysis: "Get AI Analysis",
@@ -60,11 +57,9 @@ const Dashboard = () => {
     ar: {
       title: "نتائج MBTI الخاصة بك",
       loading: "جاري تحميل النتائج...",
-      noResults: "لا توجد نتائج متاحة. جاري التوجيه إلى اختبار MBTI...",
+      noResults: "لا توجد نتائج متاحة. قم بإجراء اختبار MBTI لرؤية نتائجك!",
       personality: "نوع شخصيتك هو:",
-      scores: "النتائج التفصيلية",
-      description: "وصف الشخصية",
-      recommendedMajors: "التخصصات الموصى بها",
+      recommendedMajors: "التخصصات الموصى بها لك",
       retakeTest: "إعادة الاختبار",
       welcome: "مرحباً",
       getAiAnalysis: "تحليل بالذكاء الاصطناعي",
@@ -238,52 +233,27 @@ const Dashboard = () => {
           <>
             <div className="text-center">
               <p className="text-gray-600 mb-2">{t.personality}</p>
-              <h2 className="text-4xl font-bold text-secondary">{result.type_result}</h2>
+              <h2 className="text-4xl font-bold text-secondary mb-8">{result.type_result}</h2>
             </div>
 
             {typeDetails && (
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-xl font-semibold mb-3">{t.description}</h3>
-                  <p className="text-gray-700">
+                  <p className="text-gray-700 text-lg leading-relaxed">
                     {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="text-xl font-semibold mb-3">{t.recommendedMajors}</h3>
-                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                  <h3 className="text-xl font-semibold mb-4">{t.recommendedMajors}</h3>
+                  <ul className="list-disc list-inside space-y-2 text-gray-700">
                     {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                      <li key={index}>{major}</li>
+                      <li key={index} className="text-lg">{major}</li>
                     ))}
                   </ul>
                 </div>
               </div>
             )}
-
-            <div>
-              <h3 className="text-xl font-semibold mb-4">{t.scores}</h3>
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">E: {result.e_score}</TableCell>
-                    <TableCell className="font-medium">I: {result.i_score}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">S: {result.s_score}</TableCell>
-                    <TableCell className="font-medium">N: {result.n_score}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">T: {result.t_score}</TableCell>
-                    <TableCell className="font-medium">F: {result.f_score}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="font-medium">J: {result.j_score}</TableCell>
-                    <TableCell className="font-medium">P: {result.p_score}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
           </>
         ) : (
           <div className="text-center space-y-4">

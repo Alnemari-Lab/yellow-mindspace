@@ -72,7 +72,6 @@ const Analysis = () => {
         if (detailsError) throw detailsError;
 
         if (detailsData) {
-          console.log('Fetched type details:', detailsData);
           setTypeDetails(detailsData);
         }
 
@@ -85,7 +84,6 @@ const Analysis = () => {
         });
 
         if (error) throw error;
-        console.log('AI Analysis received:', data);
         setAnalysis(data.analysis);
 
       } catch (error) {
@@ -145,44 +143,124 @@ const Analysis = () => {
           )}
 
           {typeDetails && (
-            <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                {language === 'en' ? 'Personality Description' : 'وصف الشخصية'}
-              </h3>
-              <div className="prose prose-orange max-w-none">
-                <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
-                  {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {typeDetails && (
-            <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                {language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها'}
-              </h3>
-              <div className="space-y-2">
-                {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                  <p key={index} className="text-lg text-orange-800">
-                    • {major}
+            <>
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'AI Personality Analysis' : 'تحليل الشخصية بالذكاء الاصطناعي'}
+                </h3>
+                <div className="prose prose-orange max-w-none">
+                  <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
+                    {analysis}
                   </p>
-                ))}
+                </div>
               </div>
-            </div>
-          )}
 
-          {analysis && (
-            <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-              <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                {language === 'en' ? 'AI Personality Analysis' : 'تحليل الشخصية بالذكاء الاصطناعي'}
-              </h3>
-              <div className="prose prose-orange max-w-none">
-                <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
-                  {analysis}
-                </p>
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  {language === 'en' ? (
+                    <>
+                      <p className="mb-4">As a {personalityType} personality type, your key strengths include:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>Strong analytical and problem-solving abilities</li>
+                        <li>Natural leadership qualities</li>
+                        <li>Excellent communication skills</li>
+                        <li>Creative thinking and innovation</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-4">كشخصية من نوع {personalityType}، تتضمن نقاط قوتك الرئيسية:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>قدرات تحليلية وحل المشكلات قوية</li>
+                        <li>صفات قيادية طبيعية</li>
+                        <li>مهارات تواصل ممتازة</li>
+                        <li>التفكير الإبداعي والابتكار</li>
+                      </ul>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Areas for Growth' : 'مجالات التطور'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  {language === 'en' ? (
+                    <>
+                      <p className="mb-4">Consider working on these areas to reach your full potential:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>Developing emotional intelligence</li>
+                        <li>Improving work-life balance</li>
+                        <li>Practicing active listening</li>
+                        <li>Building patience and flexibility</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-4">فكر في العمل على هذه المجالات للوصول إلى كامل إمكاناتك:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>تطوير الذكاء العاطفي</li>
+                        <li>تحسين التوازن بين العمل والحياة</li>
+                        <li>ممارسة الاستماع النشط</li>
+                        <li>بناء الصبر والمرونة</li>
+                      </ul>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Career Paths & Major Preferences' : 'المسارات المهنية والتخصصات المفضلة'}
+                </h3>
+                <p className="text-lg leading-relaxed text-gray-700 mb-4">
+                  {language === 'en' 
+                    ? `Based on your ${personalityType} personality type, you might excel in the following fields:`
+                    : `بناءً على نمط شخصيتك ${personalityType}، قد تتفوق في المجالات التالية:`
+                  }
+                </p>
+                <div className="space-y-2">
+                  {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
+                    <p key={index} className="text-lg text-orange-800">
+                      • {major}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطور الشخصي'}
+                </h3>
+                <div className="text-lg leading-relaxed text-gray-700">
+                  {language === 'en' ? (
+                    <>
+                      <p className="mb-4">To maximize your potential, consider these development strategies:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>Join leadership development programs</li>
+                        <li>Practice mindfulness and self-reflection</li>
+                        <li>Seek mentorship opportunities</li>
+                        <li>Engage in continuous learning</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p className="mb-4">لتحقيق أقصى إمكاناتك، ضع في اعتبارك هذه الاستراتيجيات التطويرية:</p>
+                      <ul className="list-disc pl-6 space-y-2">
+                        <li>الانضمام إلى برامج تطوير القيادة</li>
+                        <li>ممارسة اليقظة الذهنية والتأمل الذاتي</li>
+                        <li>البحث عن فرص التوجيه</li>
+                        <li>المشاركة في التعلم المستمر</li>
+                      </ul>
+                    </>
+                  )}
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>

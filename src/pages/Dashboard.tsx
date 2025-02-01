@@ -28,6 +28,7 @@ const Dashboard = () => {
     getAIAnalysis: language === 'en' ? 'Get AI Analysis' : 'الحصول على تحليل الذكاء الاصطناعي',
     analyzing: language === 'en' ? 'Analyzing...' : 'جاري التحليل...',
     retakeTest: language === 'en' ? 'Retake Test' : 'إعادة الاختبار',
+    viewMajors: language === 'en' ? 'View Majors' : 'عرض التخصصات',
     personality: language === 'en' ? 'Your Personality Type' : 'نوع شخصيتك',
     recommendedMajors: language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها',
     noResults: language === 'en' 
@@ -141,6 +142,13 @@ const Dashboard = () => {
     }, 2000);
   };
 
+  const handleViewMajors = () => {
+    const element = document.querySelector('#recommended-majors');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen hero-gradient flex items-center justify-center">
@@ -166,10 +174,12 @@ const Dashboard = () => {
           <ActionButtons
             onRetakeTest={handleRetakeTest}
             onGetAIAnalysis={handleGetAIAnalysis}
+            onViewMajors={handleViewMajors}
             isAnalyzing={isAnalyzing}
             getAiAnalysisText={translations.getAIAnalysis}
             analyzingText={translations.analyzing}
             retakeTestText={translations.retakeTest}
+            viewMajorsText={translations.viewMajors}
           />
 
           {/* Personality Display */}

@@ -72,7 +72,7 @@ export const PersonalityDisplay = ({
           </div>
 
           {/* First Recommended Majors Grid - Card Style */}
-          <div className="bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg">
+          <div id="recommended-majors" className="scroll-mt-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {translations.recommendedMajors}
             </h3>

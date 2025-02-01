@@ -13,12 +13,6 @@ serve(async (req) => {
   }
 
   try {
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      console.error('OpenAI API key is not configured');
-      throw new Error('OpenAI API key is not configured in the environment');
-    }
-
     const { personalityType, language } = await req.json();
     
     console.log('Analyzing personality type:', personalityType);
@@ -48,11 +42,10 @@ serve(async (req) => {
          5. Skills to develop
          Provide a detailed and helpful response.`;
 
-    console.log('Making request to OpenAI API...');
+    console.log('Making request to AI model...');
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -66,15 +59,15 @@ serve(async (req) => {
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('OpenAI API error:', errorData);
-      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
+      console.error('AI model API error:', errorData);
+      throw new Error(`AI model API error: ${errorData.error?.message || 'Unknown error'}`);
     }
 
     const data = await response.json();
-    console.log('OpenAI response received');
+    console.log('AI response received');
 
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-      throw new Error('Invalid response format from OpenAI');
+      throw new Error('Invalid response format from AI model');
     }
 
     return new Response(JSON.stringify({ 

@@ -87,38 +87,6 @@ export const PersonalityDisplay = ({
             className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
           >
             <h3 className="text-2xl font-bold text-orange-800 mb-6">
-              {language === 'en' ? 'Areas for Growth' : 'مجالات التطور'}
-            </h3>
-            <div className="text-lg leading-relaxed text-gray-700">
-              {language === 'en' ? (
-                <>
-                  <p className="mb-4">Consider working on these areas to reach your full potential:</p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Developing emotional intelligence</li>
-                    <li>Improving work-life balance</li>
-                    <li>Practicing active listening</li>
-                    <li>Building patience and flexibility</li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <p className="mb-4">فكر في العمل على هذه المجالات للوصول إلى كامل إمكاناتك:</p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>تطوير الذكاء العاطفي</li>
-                    <li>تحسين التوازن بين العمل والحياة</li>
-                    <li>ممارسة الاستماع النشط</li>
-                    <li>بناء الصبر والمرونة</li>
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
-
-          <div 
-            onClick={handleAnalysisClick}
-            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
-          >
-            <h3 className="text-2xl font-bold text-orange-800 mb-6">
               {language === 'en' ? 'Career Paths & Major Preferences' : 'المسارات المهنية والتخصصات المفضلة'}
             </h3>
             <p className="text-lg leading-relaxed text-gray-700 mb-4">

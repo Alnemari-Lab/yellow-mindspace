@@ -183,8 +183,8 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen hero-gradient">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen hero-gradient flex flex-col">
+      <div className="container mx-auto px-4 py-8 flex-grow">
         <div className="max-w-4xl mx-auto space-y-8">
           <ProfileHeader
             fullName={profile?.full_name}
@@ -215,6 +215,17 @@ const Dashboard = () => {
           />
         </div>
       </div>
+      
+      {/* Footer */}
+      <footer className="w-full py-4 bg-white/10 backdrop-blur-sm mt-auto">
+        <div className="container mx-auto px-4 text-center">
+          <p className="text-gray-600">
+            {language === 'en' 
+              ? '© 2025 All rights reserved'
+              : '© 2025 جميع الحقوق محفوظة'}
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

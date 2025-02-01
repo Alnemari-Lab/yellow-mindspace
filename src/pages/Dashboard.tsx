@@ -94,21 +94,33 @@ const Dashboard = () => {
           return;
         }
 
-        // Fetch profile data
+        // Fetch profile data using maybeSingle() instead of single()
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, face_image_url')
           .eq('id', session.user.id)
-          .single();
+          .maybeSingle();
 
         if (profileError) {
           console.error('Error fetching profile:', profileError);
+          toast({
+            title: "Error",
+            description: "Failed to fetch profile data",
+            variant: "destructive",
+          });
           return;
         }
 
         if (profileData) {
           console.log('Profile found:', profileData);
           setProfile(profileData);
+        } else {
+          console.log('No profile found for user');
+          toast({
+            title: "Profile Not Found",
+            description: "Unable to load profile information",
+            variant: "destructive",
+          });
         }
 
         // Fetch MBTI results
@@ -156,8 +168,10 @@ const Dashboard = () => {
           return;
         }
 
-        console.log('Type details found:', typeData);
-        setTypeDetails(typeData);
+        if (typeData) {
+          console.log('Type details found:', typeData);
+          setTypeDetails(typeData);
+        }
       } catch (error) {
         console.error('Error:', error);
       } finally {
@@ -237,54 +251,58 @@ const Dashboard = () => {
           </div>
         </div>
         
-        <div className="text-center">
-          <p className="text-gray-600 mb-2">{t.personality}</p>
-          <h2 className="text-4xl font-bold text-secondary">{result.type_result}</h2>
-        </div>
-
-        {typeDetails && (
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-semibold mb-3">{t.description}</h3>
-              <p className="text-gray-700">
-                {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
-              </p>
+        {result && (
+          <>
+            <div className="text-center">
+              <p className="text-gray-600 mb-2">{t.personality}</p>
+              <h2 className="text-4xl font-bold text-secondary">{result.type_result}</h2>
             </div>
 
+            {typeDetails && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">{t.description}</h3>
+                  <p className="text-gray-700">
+                    {language === 'en' ? typeDetails.description_en : typeDetails.description_ar}
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">{t.recommendedMajors}</h3>
+                  <ul className="list-disc list-inside space-y-1 text-gray-700">
+                    {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
+                      <li key={index}>{major}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+
             <div>
-              <h3 className="text-xl font-semibold mb-3">{t.recommendedMajors}</h3>
-              <ul className="list-disc list-inside space-y-1 text-gray-700">
-                {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                  <li key={index}>{major}</li>
-                ))}
-              </ul>
+              <h3 className="text-xl font-semibold mb-4">{t.scores}</h3>
+              <Table>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="font-medium">E: {result.e_score}</TableCell>
+                    <TableCell className="font-medium">I: {result.i_score}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">S: {result.s_score}</TableCell>
+                    <TableCell className="font-medium">N: {result.n_score}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">T: {result.t_score}</TableCell>
+                    <TableCell className="font-medium">F: {result.f_score}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell className="font-medium">J: {result.j_score}</TableCell>
+                    <TableCell className="font-medium">P: {result.p_score}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
             </div>
-          </div>
+          </>
         )}
-
-        <div>
-          <h3 className="text-xl font-semibold mb-4">{t.scores}</h3>
-          <Table>
-            <TableBody>
-              <TableRow>
-                <TableCell className="font-medium">E: {result.e_score}</TableCell>
-                <TableCell className="font-medium">I: {result.i_score}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">S: {result.s_score}</TableCell>
-                <TableCell className="font-medium">N: {result.n_score}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">T: {result.t_score}</TableCell>
-                <TableCell className="font-medium">F: {result.f_score}</TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell className="font-medium">J: {result.j_score}</TableCell>
-                <TableCell className="font-medium">P: {result.p_score}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </div>
       </Card>
     </div>
   );

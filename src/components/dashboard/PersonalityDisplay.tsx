@@ -115,29 +115,7 @@ export const PersonalityDisplay = ({
             </div>
           </div>
 
-          {/* Second Recommended Majors Display - Modern Gradient Style */}
-          <div className="mt-8 bg-gradient-to-br from-yellow-100 to-orange-100 rounded-xl p-8 shadow-lg transform hover:scale-[1.02] transition-all duration-300">
-            <h3 className="text-2xl font-bold text-orange-800 mb-6">
-              {translations.recommendedMajors}
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                <div 
-                  key={`alt-${index}`}
-                  className="bg-gradient-to-r from-orange-50 to-yellow-50 p-5 rounded-lg 
-                           shadow-md hover:shadow-xl transition-all duration-300 
-                           hover:scale-105 hover:from-orange-200 hover:to-yellow-200 
-                           border border-orange-200 group cursor-pointer"
-                >
-                  <p className="text-orange-900 text-lg font-semibold group-hover:text-orange-800 transition-colors">
-                    {major}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Third Recommended Majors Display - Modern Glass Style */}
+          {/* Modern Glass Style Display */}
           <div className="mt-8 bg-gradient-to-br from-orange-50/90 to-yellow-50/90 backdrop-blur-sm rounded-xl p-8 shadow-lg">
             <h3 className="text-3xl font-bold text-orange-800 mb-8 text-center">
               {translations.recommendedMajors}

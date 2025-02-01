@@ -103,38 +103,6 @@ export const PersonalityDisplay = ({
               ))}
             </div>
           </div>
-
-          <div 
-            onClick={handleAnalysisClick}
-            className="bg-white/70 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:shadow-lg cursor-pointer"
-          >
-            <h3 className="text-2xl font-bold text-orange-800 mb-6">
-              {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطور الشخصي'}
-            </h3>
-            <div className="text-lg leading-relaxed text-gray-700">
-              {language === 'en' ? (
-                <>
-                  <p className="mb-4">To maximize your potential, consider these development strategies:</p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>Join leadership development programs</li>
-                    <li>Practice mindfulness and self-reflection</li>
-                    <li>Seek mentorship opportunities</li>
-                    <li>Engage in continuous learning</li>
-                  </ul>
-                </>
-              ) : (
-                <>
-                  <p className="mb-4">لتحقيق أقصى إمكاناتك، ضع في اعتبارك هذه الاستراتيجيات التطويرية:</p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    <li>الانضمام إلى برامج تطوير القيادة</li>
-                    <li>ممارسة اليقظة الذهنية والتأمل الذاتي</li>
-                    <li>البحث عن فرص التوجيه</li>
-                    <li>المشاركة في التعلم المستمر</li>
-                  </ul>
-                </>
-              )}
-            </div>
-          </div>
         </>
       )}
     </div>

@@ -18,6 +18,10 @@ serve(async (req) => {
     console.log('Analyzing personality type:', personalityType);
     console.log('Language:', language);
 
+    if (!personalityType) {
+      throw new Error('Personality type is required');
+    }
+
     const systemPrompt = language === 'ar' 
       ? 'أنت مستشار مهني متخصص في تحليل الشخصية. قدم تحليلاً عميقاً ومفصلاً.'
       : 'You are a professional career counselor specializing in personality analysis. Provide a deep and detailed analysis.';
@@ -53,8 +57,18 @@ serve(async (req) => {
       }),
     });
 
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('OpenAI API error:', errorData);
+      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
+    }
+
     const data = await response.json();
     console.log('OpenAI response received');
+
+    if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Invalid response format from OpenAI');
+    }
 
     return new Response(JSON.stringify({ 
       analysis: data.choices[0].message.content 
@@ -64,7 +78,9 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in analyze-personality function:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message || 'An unexpected error occurred'
+    }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Wand2, RefreshCw, GraduationCap } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface ActionButtonsProps {
   onRetakeTest: () => void;
@@ -14,7 +15,6 @@ interface ActionButtonsProps {
 
 export const ActionButtons = ({
   onRetakeTest,
-  onGetAIAnalysis,
   onViewMajors,
   isAnalyzing,
   getAiAnalysisText,
@@ -22,10 +22,16 @@ export const ActionButtons = ({
   retakeTestText,
   viewMajorsText = "View Majors",
 }: ActionButtonsProps) => {
+  const navigate = useNavigate();
+
+  const handleAnalysisClick = () => {
+    navigate('/analysis');
+  };
+
   return (
     <div className="flex flex-wrap gap-4 justify-center sm:justify-start">
       <Button 
-        onClick={onGetAIAnalysis} 
+        onClick={handleAnalysisClick} 
         disabled={isAnalyzing}
         className="bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600"
       >

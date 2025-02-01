@@ -11,6 +11,7 @@ import RegisterForm from "./components/RegisterForm";
 import Login from "./pages/Login";
 import MBTITest from "./components/MBTITest";
 import Dashboard from "./pages/Dashboard";
+import Analysis from "./pages/Analysis";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/mbti-test" element={<MBTITest />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/analysis" element={<Analysis />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

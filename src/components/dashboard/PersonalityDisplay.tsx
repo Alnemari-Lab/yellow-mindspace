@@ -51,6 +51,26 @@ export const PersonalityDisplay = ({
             </p>
           </div>
 
+          {/* Major Preferences Text Section */}
+          <div className="bg-white/70 rounded-xl p-8 shadow-md">
+            <h3 className="text-2xl font-bold text-orange-800 mb-6">
+              {language === 'en' ? 'Major Preferences' : 'التخصصات المفضلة'}
+            </h3>
+            <p className="text-lg leading-relaxed text-gray-700 mb-4">
+              {language === 'en' 
+                ? `Based on your ${result.type_result} personality type, you might excel in the following fields:`
+                : `بناءً على نمط شخصيتك ${result.type_result}، قد تتفوق في المجالات التالية:`
+              }
+            </p>
+            <div className="space-y-2">
+              {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
+                <p key={`text-${index}`} className="text-lg text-orange-800">
+                  • {major}
+                </p>
+              ))}
+            </div>
+          </div>
+
           {/* First Recommended Majors Grid - Card Style */}
           <div className="bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl p-8 shadow-lg">
             <h3 className="text-2xl font-bold text-orange-800 mb-6">

@@ -12,6 +12,9 @@ const Majors = () => {
   const { language } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [typeDetails, setTypeDetails] = useState<{
+    type_code: string;
+    description_en: string;
+    description_ar: string;
     recommended_majors_en: string[];
     recommended_majors_ar: string[];
   } | null>(null);
@@ -60,10 +63,10 @@ const Majors = () => {
 
         setPersonalityType(mbtiData.type_result);
 
-        // Fetch type details
+        // Fetch type details with recommended majors
         const { data: typeDetailsData, error: typeDetailsError } = await supabase
           .from('mbti_type_details')
-          .select('recommended_majors_en, recommended_majors_ar')
+          .select('type_code, description_en, description_ar, recommended_majors_en, recommended_majors_ar')
           .eq('type_code', mbtiData.type_result)
           .maybeSingle();
 
@@ -73,6 +76,7 @@ const Majors = () => {
         }
 
         if (typeDetailsData) {
+          console.log("Found type details:", typeDetailsData);
           setTypeDetails(typeDetailsData);
         }
 
@@ -125,6 +129,9 @@ const Majors = () => {
             <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
               {personalityType}
             </p>
+            <p className="text-xl text-orange-700">
+              {typeDetails && (language === 'en' ? typeDetails.description_en : typeDetails.description_ar)}
+            </p>
           </div>
 
           {/* Recommended Majors Section */}
@@ -163,8 +170,8 @@ const Majors = () => {
             </h3>
             <p className="text-lg text-gray-700 text-center">
               {language === 'en'
-                ? `These majors are recommended based on your ${personalityType} personality type. They align with your natural strengths and preferences.`
-                : `هذه التخصصات موصى بها بناءً على نمط شخصيتك ${personalityType}. وهي تتوافق مع نقاط قوتك وتفضيلاتك الطبيعية.`}
+                ? `These majors are recommended based on your ${personalityType} personality type. They align with your natural strengths and preferences, offering paths where you're most likely to excel and find fulfillment.`
+                : `هذه التخصصات موصى بها بناءً على نمط شخصيتك ${personalityType}. وهي تتوافق مع نقاط قوتك وتفضيلاتك الطبيعية، وتقدم مسارات حيث من المرجح أن تتفوق وتجد الرضا.`}
             </p>
           </div>
         </div>

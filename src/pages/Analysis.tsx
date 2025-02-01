@@ -183,25 +183,6 @@ const Analysis = () => {
                   )}
                 </div>
               </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Career Paths & Major Preferences' : 'المسارات المهنية والتخصصات المفضلة'}
-                </h3>
-                <p className="text-lg leading-relaxed text-gray-700 mb-4">
-                  {language === 'en' 
-                    ? `Based on your ${personalityType} personality type, you might excel in the following fields:`
-                    : `بناءً على نمط شخصيتك ${personalityType}، قد تتفوق في المجالات التالية:`
-                  }
-                </p>
-                <div className="space-y-2">
-                  {(language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-                    <p key={index} className="text-lg text-orange-800">
-                      • {major}
-                    </p>
-                  ))}
-                </div>
-              </div>
             </>
           )}
         </div>

@@ -66,7 +66,7 @@ export const useMBTITest = (questions: Question[]) => {
   };
 
   const handleResponse = async (response: boolean) => {
-    if (isSubmitting) return; // Prevent multiple submissions
+    if (isSubmitting) return;
 
     const currentQuestion = questions[currentQuestionIndex];
     console.log('Handling response for question:', currentQuestion.id, 'Response:', response);
@@ -83,16 +83,16 @@ export const useMBTITest = (questions: Question[]) => {
 
       console.log('Authenticated user:', user.id);
 
-      // Use a transaction to ensure atomicity
-      const { error: transactionError } = await supabase.rpc('handle_mbti_response', {
+      // Call the stored procedure to handle the response
+      const { error: responseError } = await supabase.rpc('handle_mbti_response', {
         p_user_id: user.id,
         p_question_id: currentQuestion.id,
         p_response: response
       });
 
-      if (transactionError) {
-        console.error('Transaction error:', transactionError);
-        throw transactionError;
+      if (responseError) {
+        console.error('Error saving response:', responseError);
+        throw responseError;
       }
 
       // If this was the last question, calculate and save results
@@ -100,7 +100,6 @@ export const useMBTITest = (questions: Question[]) => {
         console.log('Last question answered, calculating results');
         const result = calculateMBTIType(responses);
 
-        // Save results in a transaction
         const { error: resultError } = await supabase
           .from('mbti_results')
           .upsert({

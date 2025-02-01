@@ -163,7 +163,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      handle_mbti_response: {
+        Args: {
+          p_user_id: string
+          p_question_id: number
+          p_response: boolean
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       mbti_dimension: "EI" | "SN" | "TF" | "JP"

@@ -15,6 +15,7 @@ const Majors = () => {
     recommended_majors_en: string[];
     recommended_majors_ar: string[];
   } | null>(null);
+  const [personalityType, setPersonalityType] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMajors = async () => {
@@ -56,6 +57,8 @@ const Majors = () => {
           navigate('/dashboard');
           return;
         }
+
+        setPersonalityType(mbtiData.type_result);
 
         // Fetch type details
         const { data: typeDetailsData, error: typeDetailsError } = await supabase
@@ -114,30 +117,55 @@ const Majors = () => {
             {language === 'en' ? 'Back to Dashboard' : 'العودة إلى لوحة المعلومات'}
           </Button>
 
-          {/* Title */}
-          <h1 className="text-4xl font-bold text-center text-orange-800 mb-8">
-            {language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها'}
-          </h1>
+          {/* Title with Personality Type */}
+          <div className="text-center space-y-4">
+            <h1 className="text-4xl font-bold text-orange-800">
+              {language === 'en' ? 'Your Personality Type' : 'نمط شخصيتك'}
+            </h1>
+            <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
+              {personalityType}
+            </p>
+          </div>
 
-          {/* Majors Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {typeDetails && (language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
-              <div
-                key={index}
-                className="bg-white/40 backdrop-blur-md p-6 rounded-xl 
-                         shadow-lg hover:shadow-2xl transition-all duration-300 
-                         hover:scale-105 hover:bg-white/60 
-                         border border-white/50 group cursor-pointer
-                         animate-fade-in"
-                style={{
-                  animationDelay: `${index * 100}ms`
-                }}
-              >
-                <p className="text-orange-900 text-xl font-bold text-center group-hover:text-orange-700 transition-colors">
-                  {major}
-                </p>
-              </div>
-            ))}
+          {/* Recommended Majors Section */}
+          <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+            <h2 className="text-3xl font-bold text-orange-800 mb-8 text-center">
+              {language === 'en' ? 'Recommended Majors' : 'التخصصات الموصى بها'}
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {typeDetails && (language === 'en' ? typeDetails.recommended_majors_en : typeDetails.recommended_majors_ar).map((major, index) => (
+                <div
+                  key={index}
+                  className="bg-white/40 backdrop-blur-md p-6 rounded-xl 
+                           shadow-lg hover:shadow-2xl transition-all duration-300 
+                           hover:scale-105 hover:bg-white/60 
+                           border border-white/50 group cursor-pointer
+                           animate-fade-in"
+                  style={{
+                    animationDelay: `${index * 100}ms`
+                  }}
+                >
+                  <p className="text-orange-900 text-xl font-bold text-center group-hover:text-orange-700 transition-colors">
+                    {major}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Description Section */}
+          <div className="bg-white/60 rounded-xl p-8 shadow-lg">
+            <h3 className="text-2xl font-bold text-orange-800 mb-4 text-center">
+              {language === 'en' 
+                ? 'Why These Majors?' 
+                : 'لماذا هذه التخصصات؟'}
+            </h3>
+            <p className="text-lg text-gray-700 text-center">
+              {language === 'en'
+                ? `These majors are recommended based on your ${personalityType} personality type. They align with your natural strengths and preferences.`
+                : `هذه التخصصات موصى بها بناءً على نمط شخصيتك ${personalityType}. وهي تتوافق مع نقاط قوتك وتفضيلاتك الطبيعية.`}
+            </p>
           </div>
         </div>
       </div>

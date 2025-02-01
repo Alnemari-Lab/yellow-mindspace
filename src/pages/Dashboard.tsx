@@ -7,7 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Wand2 } from "lucide-react";
+import { Wand2, RefreshCw } from "lucide-react";
 
 interface Profile {
   full_name: string;
@@ -143,34 +143,27 @@ const Dashboard = () => {
 
         if (!resultData || resultData.length === 0) {
           console.log('No results found');
-          toast({
-            title: "No Results Found",
-            description: t.noResults,
-          });
-          setTimeout(() => {
-            navigate('/mbti-test');
-          }, 2000);
-          return;
-        }
+          setResult(null);
+        } else {
+          console.log('Results found:', resultData[0]);
+          setResult(resultData[0]);
 
-        console.log('Results found:', resultData[0]);
-        setResult(resultData[0]);
+          // Fetch type details
+          const { data: typeData, error: typeError } = await supabase
+            .from('mbti_type_details')
+            .select('*')
+            .eq('type_code', resultData[0].type_result)
+            .maybeSingle();
 
-        // Fetch type details
-        const { data: typeData, error: typeError } = await supabase
-          .from('mbti_type_details')
-          .select('*')
-          .eq('type_code', resultData[0].type_result)
-          .maybeSingle();
+          if (typeError) {
+            console.error('Error fetching type details:', typeError);
+            return;
+          }
 
-        if (typeError) {
-          console.error('Error fetching type details:', typeError);
-          return;
-        }
-
-        if (typeData) {
-          console.log('Type details found:', typeData);
-          setTypeDetails(typeData);
+          if (typeData) {
+            console.log('Type details found:', typeData);
+            setTypeDetails(typeData);
+          }
         }
       } catch (error) {
         console.error('Error:', error);
@@ -189,7 +182,6 @@ const Dashboard = () => {
   const handleGetAIAnalysis = async () => {
     setIsAnalyzing(true);
     try {
-      // Here we'll add the AI analysis functionality later
       toast({
         title: "Coming Soon",
         description: "AI analysis feature is coming soon!",
@@ -216,16 +208,6 @@ const Dashboard = () => {
     );
   }
 
-  if (!result) {
-    return (
-      <div className="min-h-screen hero-gradient flex items-center justify-center">
-        <Card className="p-6">
-          <p>{t.noResults}</p>
-        </Card>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen hero-gradient flex items-center justify-center p-4">
       <Card className="w-full max-w-4xl p-6 space-y-8">
@@ -246,12 +228,13 @@ const Dashboard = () => {
               {isAnalyzing ? t.analyzing : t.getAiAnalysis}
             </Button>
             <Button onClick={handleRetakeTest} variant="outline">
+              <RefreshCw className="mr-2 h-4 w-4" />
               {t.retakeTest}
             </Button>
           </div>
         </div>
         
-        {result && (
+        {result ? (
           <>
             <div className="text-center">
               <p className="text-gray-600 mb-2">{t.personality}</p>
@@ -302,6 +285,10 @@ const Dashboard = () => {
               </Table>
             </div>
           </>
+        ) : (
+          <div className="text-center space-y-4">
+            <p>{t.noResults}</p>
+          </div>
         )}
       </Card>
     </div>

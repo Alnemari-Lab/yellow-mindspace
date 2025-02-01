@@ -55,37 +55,63 @@ const Dashboard = () => {
           return;
         }
 
+        console.log("Fetching data for user:", user.id);
+
         // Fetch profile data
-        const { data: profileData } = await supabase
+        const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('full_name, face_image_url')
           .eq('id', user.id)
-          .single();
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("Profile fetch error:", profileError);
+          throw profileError;
+        }
 
         if (profileData) {
+          console.log("Profile data found:", profileData);
           setProfile(profileData);
+        } else {
+          console.log("No profile data found for user");
         }
 
         // Fetch MBTI results
-        const { data: mbtiData } = await supabase
+        const { data: mbtiData, error: mbtiError } = await supabase
           .from('mbti_results')
           .select('type_result')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
+
+        if (mbtiError) {
+          console.error("MBTI results fetch error:", mbtiError);
+          throw mbtiError;
+        }
 
         if (mbtiData) {
+          console.log("MBTI result found:", mbtiData);
           setResult(mbtiData);
           
           // Fetch type details if we have a result
-          const { data: typeDetailsData } = await supabase
+          const { data: typeDetailsData, error: typeDetailsError } = await supabase
             .from('mbti_type_details')
             .select('description_en, description_ar, recommended_majors_en, recommended_majors_ar')
             .eq('type_code', mbtiData.type_result)
-            .single();
+            .maybeSingle();
+
+          if (typeDetailsError) {
+            console.error("Type details fetch error:", typeDetailsError);
+            throw typeDetailsError;
+          }
 
           if (typeDetailsData) {
+            console.log("Type details found:", typeDetailsData);
             setTypeDetails(typeDetailsData);
+          } else {
+            console.log("No type details found for type:", mbtiData.type_result);
           }
+        } else {
+          console.log("No MBTI results found for user");
         }
 
       } catch (error) {

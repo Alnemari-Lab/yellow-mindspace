@@ -133,54 +133,58 @@ const MBTITest = () => {
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError || !user) throw new Error("User not authenticated");
 
-        // First, delete any existing responses for this user and wait for it to complete
+        // Delete existing response for the current question first
         const { error: deleteError } = await supabase
           .from('mbti_responses')
           .delete()
-          .eq('user_id', user.id);
+          .eq('user_id', user.id)
+          .eq('question_id', currentQuestion.id);
 
         if (deleteError) throw deleteError;
 
-        // After deletion is complete, insert new responses one by one
-        for (const [questionId, responseValue] of Object.entries(responses)) {
-          const { error: insertError } = await supabase
-            .from('mbti_responses')
-            .insert({
-              user_id: user.id,
-              question_id: parseInt(questionId),
-              response: responseValue
-            });
-          
-          if (insertError) throw insertError;
-        }
-
-        // Calculate and save results
-        const result = calculateMBTIType(responses);
-
-        // Delete any existing results for this user
-        const { error: deleteResultError } = await supabase
-          .from('mbti_results')
-          .delete()
-          .eq('user_id', user.id);
-
-        if (deleteResultError) throw deleteResultError;
-
-        // Save new results
-        await supabase
-          .from('mbti_results')
+        // Insert new response
+        const { error: insertError } = await supabase
+          .from('mbti_responses')
           .insert({
             user_id: user.id,
-            type_result: result.type,
-            ...result.scores
+            question_id: currentQuestion.id,
+            response
           });
 
-        // Navigate to dashboard
-        navigate('/dashboard');
+        if (insertError) throw insertError;
+
+        // If this is the last question, calculate and save results
+        if (currentQuestionIndex === questions.length - 1) {
+          // Calculate and save results
+          const result = calculateMBTIType(responses);
+
+          // Delete any existing results for this user
+          const { error: deleteResultError } = await supabase
+            .from('mbti_results')
+            .delete()
+            .eq('user_id', user.id);
+
+          if (deleteResultError) throw deleteResultError;
+
+          // Save new results
+          const { error: resultError } = await supabase
+            .from('mbti_results')
+            .insert({
+              user_id: user.id,
+              type_result: result.type,
+              ...result.scores
+            });
+
+          if (resultError) throw resultError;
+
+          // Navigate to dashboard only after all operations are complete
+          navigate('/dashboard');
+        }
       } catch (error) {
-        console.error('Error saving responses:', error);
+        console.error('Error saving response:', error);
         toast({
           title: "Error",
-          description: "Failed to save your responses. Please try again.",
+          description: "Failed to save your response. Please try again.",
           variant: "destructive",
         });
       } finally {

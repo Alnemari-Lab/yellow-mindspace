@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 interface ActionButtonsProps {
   onRetakeTest: () => void;
-  onGetAIAnalysis: () => void;
+  onGetAIAnalysis?: () => void;
   onViewMajors?: () => void;
   isAnalyzing: boolean;
   getAiAnalysisText: string;
@@ -15,7 +15,6 @@ interface ActionButtonsProps {
 
 export const ActionButtons = ({
   onRetakeTest,
-  onViewMajors,
   isAnalyzing,
   getAiAnalysisText,
   analyzingText,
@@ -26,6 +25,10 @@ export const ActionButtons = ({
 
   const handleAnalysisClick = () => {
     navigate('/analysis');
+  };
+
+  const handleViewMajorsClick = () => {
+    navigate('/majors');
   };
 
   return (
@@ -46,15 +49,13 @@ export const ActionButtons = ({
         <RefreshCw className="mr-2 h-5 w-5" />
         {retakeTestText}
       </Button>
-      {onViewMajors && (
-        <Button
-          onClick={onViewMajors}
-          className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
-        >
-          <GraduationCap className="mr-2 h-5 w-5" />
-          {viewMajorsText}
-        </Button>
-      )}
+      <Button
+        onClick={handleViewMajorsClick}
+        className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+      >
+        <GraduationCap className="mr-2 h-5 w-5" />
+        {viewMajorsText}
+      </Button>
     </div>
   );
 };

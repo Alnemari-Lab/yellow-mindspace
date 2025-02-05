@@ -7,6 +7,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import FaceCapture from "./FaceCapture";
 import { useToast } from "@/components/ui/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -30,8 +31,10 @@ const RegisterForm = () => {
       register: "Register",
       alreadyHaveAccount: "Already have an account?",
       login: "Login",
-      captureFace: "Capture Face Image",
-      faceRequired: "Please capture your face image",
+      captureFace: "Capture Face",
+      uploadImage: "Upload Image",
+      faceRequired: "Please provide a face image",
+      uploadOrCapture: "Upload or capture your face image",
     },
     ar: {
       createAccount: "إنشاء حساب",
@@ -42,12 +45,27 @@ const RegisterForm = () => {
       register: "تسجيل",
       alreadyHaveAccount: "لديك حساب بالفعل؟",
       login: "تسجيل الدخول",
-      captureFace: "التقاط صورة الوجه",
-      faceRequired: "يرجى التقاط صورة الوجه",
+      captureFace: "التقاط صورة",
+      uploadImage: "رفع صورة",
+      faceRequired: "يرجى تقديم صورة الوجه",
+      uploadOrCapture: "قم برفع أو التقاط صورة الوجه",
     }
   };
 
   const t = translations[language];
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Convert the uploaded file to a Blob
+      const blob = new Blob([file], { type: file.type });
+      setFaceImage(blob);
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully!",
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -173,7 +191,26 @@ const RegisterForm = () => {
           />
         </div>
         <div className="space-y-2">
-          <FaceCapture onCapture={handleFaceCapture} />
+          <p className="text-sm text-gray-600 mb-2">{t.uploadOrCapture}</p>
+          <Tabs defaultValue="capture" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="capture">{t.captureFace}</TabsTrigger>
+              <TabsTrigger value="upload">{t.uploadImage}</TabsTrigger>
+            </TabsList>
+            <TabsContent value="capture">
+              <FaceCapture onCapture={handleFaceCapture} />
+            </TabsContent>
+            <TabsContent value="upload">
+              <div className="space-y-4">
+                <Input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="w-full"
+                />
+              </div>
+            </TabsContent>
+          </Tabs>
           {faceImage && (
             <p className="text-sm text-green-600">Face image captured successfully!</p>
           )}

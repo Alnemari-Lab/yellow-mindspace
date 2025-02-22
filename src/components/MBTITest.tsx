@@ -5,7 +5,6 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { QuestionDisplay } from "./mbti/QuestionDisplay";
-import { ResponseButtons } from "./mbti/ResponseButtons";
 import { TestProgress } from "./mbti/TestProgress";
 import { useMBTITest } from "@/hooks/useMBTITest";
 
@@ -74,10 +73,7 @@ const MBTITest = () => {
           questionText={currentQuestion.question_text} 
           questionTextAr={currentQuestion.question_text_ar} 
           questionNumber={currentQuestionIndex + 1}
-        />
-        <ResponseButtons 
-          onResponse={handleResponse} 
-          isSubmitting={isSubmitting} 
+          onResponse={handleResponse}
         />
       </Card>
     </div>

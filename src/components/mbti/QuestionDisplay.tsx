@@ -16,23 +16,29 @@ export const QuestionDisplay = ({
   const { language } = useLanguage();
   const displayText = language === 'ar' ? questionTextAr : questionText;
 
-  // Split the question text into the main question and options
-  const [mainQuestion, ...options] = displayText.split('\n\n').filter(Boolean);
+  // Split the text into question and options
+  const parts = displayText.split('\n\n');
+  const mainQuestion = parts[0];
+  const options = parts.slice(1, 3); // Get the two options
 
   return (
     <div className="space-y-6">
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
+      <div>
+        <h2 className="text-xl font-semibold mb-6">
           {questionNumber}.
           <br />
           {mainQuestion}
         </h2>
       </div>
-      <div className="space-y-6 mt-8">
+      <div className="space-y-4">
         {options.map((option, index) => (
-          <p key={index} className="text-lg">
-            {option}
-          </p>
+          <div 
+            key={index}
+            className="p-4 rounded-lg border border-gray-200 hover:border-primary cursor-pointer transition-colors"
+            onClick={() => onResponse?.(index === 0)}
+          >
+            <p className="text-lg">{option}</p>
+          </div>
         ))}
       </div>
     </div>

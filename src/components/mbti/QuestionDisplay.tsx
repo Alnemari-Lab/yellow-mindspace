@@ -24,23 +24,22 @@ export const QuestionDisplay = ({
   const options = parts.slice(1, 3); // Get the two options
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-semibold mb-6">
+    <div className="space-y-8">
+      <div className="text-center">
+        <h2 className="text-xl font-medium mb-2">
           {questionNumber}.
-          <br />
-          {mainQuestion}
         </h2>
+        <p className="text-lg">{mainQuestion}</p>
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 max-w-xl mx-auto">
         {options.map((option, index) => (
-          <div 
+          <button
             key={index}
-            className="p-4 rounded-lg border border-gray-200 hover:border-primary cursor-pointer transition-colors"
             onClick={() => onResponse(index === 0)}
+            className="w-full p-6 text-left rounded-lg border-2 border-gray-200 hover:border-primary hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
           >
             <p className="text-lg">{option}</p>
-          </div>
+          </button>
         ))}
       </div>
     </div>

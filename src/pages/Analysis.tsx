@@ -28,6 +28,7 @@ const Analysis = () => {
   const [personalityType, setPersonalityType] = useState<string | null>(null);
   const [typeDetails, setTypeDetails] = useState<TypeDetails | null>(null);
   const [developmentAreas, setDevelopmentAreas] = useState<DevelopmentArea[]>([]);
+  const [areaAnalyses, setAreaAnalyses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -46,7 +47,6 @@ const Analysis = () => {
           return;
         }
 
-        // Fetch the user's MBTI result
         const { data: mbtiData, error: mbtiError } = await supabase
           .from('mbti_results')
           .select('type_result')
@@ -68,42 +68,63 @@ const Analysis = () => {
         }
 
         setPersonalityType(mbtiData.type_result);
+        
+        const [detailsResponse, areasResponse] = await Promise.all([
+          supabase
+            .from('mbti_type_details')
+            .select('*')
+            .eq('type_code', mbtiData.type_result)
+            .maybeSingle(),
+          supabase
+            .from('mbti_development_areas')
+            .select('area_key, explanation_en, explanation_ar')
+            .eq('type_code', mbtiData.type_result)
+        ]);
 
-        // Fetch personality type details
-        const { data: detailsData, error: detailsError } = await supabase
-          .from('mbti_type_details')
-          .select('*')
-          .eq('type_code', mbtiData.type_result)
-          .maybeSingle();
+        if (detailsResponse.error) throw detailsResponse.error;
+        if (areasResponse.error) throw areasResponse.error;
 
-        if (detailsError) throw detailsError;
-
-        if (detailsData) {
-          setTypeDetails(detailsData);
+        if (detailsResponse.data) {
+          setTypeDetails(detailsResponse.data);
         }
 
-        // Fetch development areas
-        const { data: areasData, error: areasError } = await supabase
-          .from('mbti_development_areas')
-          .select('area_key, explanation_en, explanation_ar')
-          .eq('type_code', mbtiData.type_result);
-
-        if (areasError) throw areasError;
-
-        if (areasData) {
-          setDevelopmentAreas(areasData);
+        if (areasResponse.data) {
+          setDevelopmentAreas(areasResponse.data);
+          
+          const analyses: Record<string, string> = {};
+          await Promise.all(
+            areasResponse.data.map(async (area) => {
+              try {
+                const { data, error } = await supabase.functions.invoke('analyze-development-areas', {
+                  body: {
+                    personalityType: mbtiData.type_result,
+                    area: area.area_key,
+                    language
+                  },
+                });
+                
+                if (error) throw error;
+                analyses[area.area_key] = data.analysis;
+              } catch (e) {
+                console.error(`Error generating analysis for ${area.area_key}:`, e);
+                analyses[area.area_key] = language === 'en' 
+                  ? "Unable to generate analysis at this time."
+                  : "غير قادر على إنشاء التحليل في هذا الوقت.";
+              }
+            })
+          );
+          setAreaAnalyses(analyses);
         }
 
-        // Get AI Analysis
-        const { data, error } = await supabase.functions.invoke('analyze-personality', {
+        const { data: aiData, error: aiError } = await supabase.functions.invoke('analyze-personality', {
           body: {
             personalityType: mbtiData.type_result,
             language
           },
         });
 
-        if (error) throw error;
-        setAnalysis(data.analysis);
+        if (aiError) throw aiError;
+        setAnalysis(aiData.analysis);
 
       } catch (error) {
         console.error('Error fetching analysis:', error);
@@ -194,24 +215,6 @@ const Analysis = () => {
                   <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
                     {analysis}
                   </p>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {developmentAreas.map((area) => (
-                    <div key={area.area_key} className="bg-white/50 p-6 rounded-lg shadow-sm">
-                      <h4 className="text-xl font-semibold text-orange-800 mb-2">
-                        {areaLabels[area.area_key]?.[language]}
-                      </h4>
-                      <p className="text-gray-700">
-                        {language === 'en' ? area.explanation_en : area.explanation_ar}
-                      </p>
-                    </div>
-                  ))}
                 </div>
               </div>
 
@@ -318,6 +321,31 @@ const Analysis = () => {
                       </>
                     )}
                   </ul>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {developmentAreas.map((area) => (
+                    <div key={area.area_key} className="bg-white/50 p-6 rounded-lg shadow-sm">
+                      <h4 className="text-xl font-semibold text-orange-800 mb-2">
+                        {areaLabels[area.area_key]?.[language]}
+                      </h4>
+                      <p className="text-gray-700 mb-4">
+                        {language === 'en' ? area.explanation_en : area.explanation_ar}
+                      </p>
+                      <div className="mt-4 pt-4 border-t border-gray-200">
+                        <p className="text-gray-700 italic">
+                          {areaAnalyses[area.area_key] || (language === 'en' 
+                            ? 'Generating personalized insights...' 
+                            : 'جاري إنشاء الرؤى الشخصية...')}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </>

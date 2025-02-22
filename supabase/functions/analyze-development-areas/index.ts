@@ -17,10 +17,30 @@ serve(async (req) => {
     const { personalityType, area, language } = await req.json();
     console.log('Generating analysis for:', { personalityType, area, language });
 
-    // Initialize Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const areaPrompts = {
+      cultural: {
+        en: "Provide specific advice for cultural development and learning",
+        ar: "كيف تطور ثقافتك"
+      },
+      health: {
+        en: "Provide specific advice for health improvement and wellness",
+        ar: "كيف تهتم بصحتك"
+      },
+      relationships: {
+        en: "Provide specific advice for developing better relationships",
+        ar: "كيف تطور علاقاتك"
+      },
+      financial: {
+        en: "Provide specific advice for financial growth and management",
+        ar: "كيف تنمي مالك"
+      },
+      faith: {
+        en: "Provide specific advice for strengthening faith and spiritual growth",
+        ar: "كيف تقوي إيمانك"
+      }
+    };
+
+    const prompt = language === 'ar' ? areaPrompts[area].ar : areaPrompts[area].en;
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -34,12 +54,13 @@ serve(async (req) => {
           {
             role: 'system',
             content: `You are a personality development expert specializing in MBTI personality types. 
-            Provide specific, actionable advice for personal development.
-            Keep responses concise (2-3 sentences) and tailored to the personality type.`
+            Your task is to provide specific, actionable advice for a ${personalityType} personality type.
+            Keep responses concise (2-3 sentences) and personalized to their personality type.
+            ${language === 'ar' ? 'Respond in Arabic.' : 'Respond in English.'}`
           },
           {
             role: 'user',
-            content: `Generate specific advice for a ${personalityType} personality type in their ${area} development area. ${language === 'ar' ? 'Respond in Arabic.' : 'Respond in English.'}`
+            content: `Based on the ${personalityType} personality type, ${prompt}`
           }
         ],
       }),

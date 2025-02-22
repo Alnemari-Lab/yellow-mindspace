@@ -18,9 +18,10 @@ export const QuestionDisplay = ({
   const { language } = useLanguage();
   const displayText = language === 'ar' ? questionTextAr : questionText;
 
-  const options = language === 'ar' 
-    ? ['موافق', 'غير موافق']
-    : ['Agree', 'Disagree'];
+  // Split the text to separate the question from the options
+  const parts = displayText.split('\n\n');
+  const mainQuestion = parts[0];
+  const options = parts.slice(1).filter(Boolean); // Get all non-empty parts after the question
 
   return (
     <div className="space-y-8">
@@ -28,7 +29,7 @@ export const QuestionDisplay = ({
         <h2 className="text-xl font-medium mb-2">
           {questionNumber}.
         </h2>
-        <p className="text-lg">{displayText}</p>
+        <p className="text-lg">{mainQuestion}</p>
       </div>
       <div className="space-y-4 max-w-xl mx-auto">
         {options.map((option, index) => (
@@ -37,7 +38,7 @@ export const QuestionDisplay = ({
             onClick={() => onResponse(index === 0)}
             className="w-full p-6 text-left rounded-lg border-2 border-gray-200 hover:border-primary hover:bg-gray-50 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
           >
-            <p className="text-lg">{option}</p>
+            <p className="text-lg">{option.trim()}</p>
           </button>
         ))}
       </div>

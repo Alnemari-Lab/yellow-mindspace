@@ -6,8 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface Question {
   id: number;
-  text: string;
-  options: string[];
+  text: {
+    en: string;
+    ar: string;
+  };
+  options: {
+    en: string[];
+    ar: string[];
+  };
 }
 
 export const useMBTITest = (questions: Question[]) => {

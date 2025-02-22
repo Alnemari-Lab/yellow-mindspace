@@ -20,15 +20,13 @@ export const QuestionDisplay = ({
   const [mainQuestion, ...options] = displayText.split('\n\n').filter(Boolean);
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-left">
-        {questionNumber}.
-        <br />
-        {mainQuestion}
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold">
+        {questionNumber}. {mainQuestion}
       </h2>
-      <div className="space-y-4 mt-4">
+      <div className="space-y-4">
         {options.map((option, index) => (
-          <p key={index} className="text-lg text-left pl-4">
+          <p key={index} className="text-lg">
             {option}
           </p>
         ))}

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -14,6 +13,12 @@ interface TypeDetails {
   recommended_majors_ar: string[];
 }
 
+interface DevelopmentArea {
+  area_key: string;
+  explanation_en: string;
+  explanation_ar: string;
+}
+
 const Analysis = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -22,6 +27,7 @@ const Analysis = () => {
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [personalityType, setPersonalityType] = useState<string | null>(null);
   const [typeDetails, setTypeDetails] = useState<TypeDetails | null>(null);
+  const [developmentAreas, setDevelopmentAreas] = useState<DevelopmentArea[]>([]);
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -76,6 +82,18 @@ const Analysis = () => {
           setTypeDetails(detailsData);
         }
 
+        // Fetch development areas
+        const { data: areasData, error: areasError } = await supabase
+          .from('mbti_development_areas')
+          .select('area_key, explanation_en, explanation_ar')
+          .eq('type_code', mbtiData.type_result);
+
+        if (areasError) throw areasError;
+
+        if (areasData) {
+          setDevelopmentAreas(areasData);
+        }
+
         // Get AI Analysis
         const { data, error } = await supabase.functions.invoke('analyze-personality', {
           body: {
@@ -119,51 +137,27 @@ const Analysis = () => {
     );
   }
 
-  const selfImprovementAreas = {
-    ar: [
-      {
-        title: "تطوير الثقافة",
-        description: "كيف تطور ثقافتك"
-      },
-      {
-        title: "الاهتمام بالصحة",
-        description: "كيف تهتم بصحتك"
-      },
-      {
-        title: "تطوير العلاقات",
-        description: "كيف تطور بعلاقاتك"
-      },
-      {
-        title: "النمو المالي",
-        description: "كيف تنمي مالك"
-      },
-      {
-        title: "تقوية الإيمان",
-        description: "كيف تقوي إيمانك"
-      }
-    ],
-    en: [
-      {
-        title: "Cultural Development",
-        description: "How to develop your cultural awareness"
-      },
-      {
-        title: "Health Care",
-        description: "How to take care of your health"
-      },
-      {
-        title: "Relationship Development",
-        description: "How to improve your relationships"
-      },
-      {
-        title: "Financial Growth",
-        description: "How to grow your wealth"
-      },
-      {
-        title: "Faith Strengthening",
-        description: "How to strengthen your faith"
-      }
-    ]
+  const areaLabels = {
+    cultural: {
+      en: "Cultural Development",
+      ar: "تطوير الثقافة"
+    },
+    health: {
+      en: "Health Care",
+      ar: "الاهتمام بالصحة"
+    },
+    relationships: {
+      en: "Relationship Development",
+      ar: "تطوير العلاقات"
+    },
+    financial: {
+      en: "Financial Growth",
+      ar: "النمو المالي"
+    },
+    faith: {
+      en: "Faith Strengthening",
+      ar: "تقوية الإيمان"
+    }
   };
 
   return (
@@ -208,13 +202,13 @@ const Analysis = () => {
                   {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {selfImprovementAreas[language].map((area, index) => (
-                    <div key={index} className="bg-white/50 p-6 rounded-lg shadow-sm">
+                  {developmentAreas.map((area) => (
+                    <div key={area.area_key} className="bg-white/50 p-6 rounded-lg shadow-sm">
                       <h4 className="text-xl font-semibold text-orange-800 mb-2">
-                        {area.title}
+                        {areaLabels[area.area_key]?.[language]}
                       </h4>
                       <p className="text-gray-700">
-                        {area.description}
+                        {language === 'en' ? area.explanation_en : area.explanation_ar}
                       </p>
                     </div>
                   ))}

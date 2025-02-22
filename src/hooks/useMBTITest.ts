@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -5,9 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface Question {
   id: number;
-  question_text: string;
-  question_text_ar: string;
-  dimension: string;
+  text: string;
+  options: string[];
 }
 
 export const useMBTITest = (questions: Question[]) => {
@@ -22,11 +22,24 @@ export const useMBTITest = (questions: Question[]) => {
       E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0
     };
 
-    Object.entries(responses).forEach(([questionId, response]) => {
-      const question = questions.find(q => q.id === Number(questionId));
-      if (!question) return;
+    // Map questions to their corresponding dimensions
+    const dimensionMap: Record<number, [keyof typeof scores, keyof typeof scores]> = {
+      1: ['T', 'F'], 2: ['S', 'N'], 3: ['T', 'F'], 4: ['N', 'S'],
+      5: ['P', 'J'], 6: ['F', 'T'], 7: ['N', 'S'], 8: ['I', 'E'],
+      9: ['T', 'F'], 10: ['N', 'S'], 11: ['T', 'F'], 12: ['I', 'E'],
+      13: ['S', 'N'], 14: ['T', 'F'], 15: ['I', 'E'], 16: ['F', 'T'],
+      17: ['T', 'F'], 18: ['N', 'S'], 19: ['I', 'E'], 20: ['T', 'F'],
+      21: ['N', 'S'], 22: ['E', 'I'], 23: ['I', 'E'], 24: ['J', 'P'],
+      25: ['F', 'T'], 26: ['F', 'T'], 27: ['F', 'T'], 28: ['I', 'E'],
+      29: ['N', 'S'], 30: ['T', 'F'], 31: ['P', 'J'], 32: ['T', 'F'],
+      33: ['S', 'N'], 34: ['S', 'N'], 35: ['I', 'E'], 36: ['I', 'E']
+    };
 
-      const [positive, negative] = question.dimension.split('') as [keyof typeof scores, keyof typeof scores];
+    Object.entries(responses).forEach(([questionId, response]) => {
+      const dimension = dimensionMap[Number(questionId)];
+      if (!dimension) return;
+
+      const [positive, negative] = dimension;
       response ? scores[positive]++ : scores[negative]++;
     });
 
@@ -59,16 +72,6 @@ export const useMBTITest = (questions: Question[]) => {
       if (userError || !user) throw new Error("User not authenticated");
 
       const updatedResponses = { ...responses, [currentQuestion.id]: response };
-
-      // Use the stored procedure to handle responses
-      const { error: responsesError } = await supabase.rpc('handle_mbti_response', {
-        p_user_id: user.id,
-        p_question_id: currentQuestion.id,
-        p_response: response
-      });
-
-      if (responsesError) throw responsesError;
-
       const result = calculateMBTIType(updatedResponses);
 
       // Save final results

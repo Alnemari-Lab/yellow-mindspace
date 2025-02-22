@@ -6,12 +6,14 @@ interface QuestionDisplayProps {
   questionText: string;
   questionTextAr: string;
   questionNumber: number;
+  onResponse: (response: boolean) => void;
 }
 
 export const QuestionDisplay = ({ 
   questionText, 
   questionTextAr, 
-  questionNumber 
+  questionNumber,
+  onResponse 
 }: QuestionDisplayProps) => {
   const { language } = useLanguage();
   const displayText = language === 'ar' ? questionTextAr : questionText;
@@ -35,7 +37,7 @@ export const QuestionDisplay = ({
           <div 
             key={index}
             className="p-4 rounded-lg border border-gray-200 hover:border-primary cursor-pointer transition-colors"
-            onClick={() => onResponse?.(index === 0)}
+            onClick={() => onResponse(index === 0)}
           >
             <p className="text-lg">{option}</p>
           </div>

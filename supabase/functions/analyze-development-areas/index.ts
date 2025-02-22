@@ -1,7 +1,6 @@
 
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.38.0';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -17,57 +16,83 @@ serve(async (req) => {
     const { personalityType, area, language } = await req.json();
     console.log('Generating analysis for:', { personalityType, area, language });
 
-    const areaPrompts = {
+    // Predefined responses based on personality types and areas
+    const responses = {
       cultural: {
-        en: "Provide specific advice for cultural development and learning",
-        ar: "كيف تطور ثقافتك"
+        en: {
+          INTJ: "Focus on systematic learning through structured online courses and documentaries. Create a knowledge acquisition plan.",
+          INTP: "Explore philosophical texts and academic research. Join online discussion groups for intellectual discourse.",
+          // ... add responses for other types
+          DEFAULT: "Engage in cultural activities that align with your interests. Set specific learning goals."
+        },
+        ar: {
+          INTJ: "ركز على التعلم المنهجي من خلال الدورات عبر الإنترنت والأفلام الوثائقية. قم بإنشاء خطة لاكتساب المعرفة.",
+          INTP: "استكشف النصوص الفلسفية والبحث الأكاديمي. انضم إلى مجموعات النقاش عبر الإنترنت للخطاب الفكري.",
+          // ... add responses for other types
+          DEFAULT: "شارك في الأنشطة الثقافية التي تتوافق مع اهتماماتك. حدد أهداف تعلم محددة."
+        }
       },
       health: {
-        en: "Provide specific advice for health improvement and wellness",
-        ar: "كيف تهتم بصحتك"
+        en: {
+          INTJ: "Create a data-driven fitness plan. Track your progress using health apps and metrics.",
+          INTP: "Research evidence-based health practices. Design experiments to optimize your wellness routine.",
+          // ... add responses for other types
+          DEFAULT: "Develop a consistent exercise routine and maintain a balanced diet."
+        },
+        ar: {
+          INTJ: "قم بإنشاء خطة لياقة بدنية قائمة على البيانات. تتبع تقدمك باستخدام تطبيقات وقياسات الصحة.",
+          INTP: "ابحث في ممارسات الصحة المستندة إلى الأدلة. صمم تجارب لتحسين روتين العافية الخاص بك.",
+          // ... add responses for other types
+          DEFAULT: "طور روتين تمارين منتظم وحافظ على نظام غذائي متوازن."
+        }
       },
       relationships: {
-        en: "Provide specific advice for developing better relationships",
-        ar: "كيف تطور علاقاتك"
+        en: {
+          INTJ: "Schedule regular check-ins with important connections. Practice active listening techniques.",
+          INTP: "Analyze relationship patterns and work on emotional intelligence. Join group activities.",
+          // ... add responses for other types
+          DEFAULT: "Invest time in meaningful connections. Practice empathy and active communication."
+        },
+        ar: {
+          INTJ: "جدول مواعيد منتظمة للتواصل مع العلاقات المهمة. مارس تقنيات الاستماع النشط.",
+          INTP: "حلل أنماط العلاقات واعمل على الذكاء العاطفي. انضم إلى الأنشطة الجماعية.",
+          // ... add responses for other types
+          DEFAULT: "استثمر وقتك في العلاقات الهادفة. مارس التعاطف والتواصل النشط."
+        }
       },
       financial: {
-        en: "Provide specific advice for financial growth and management",
-        ar: "كيف تنمي مالك"
+        en: {
+          INTJ: "Develop a detailed long-term financial strategy. Research investment opportunities systematically.",
+          INTP: "Analyze market trends and economic theories. Create multiple income stream hypotheses.",
+          // ... add responses for other types
+          DEFAULT: "Create a budget and set clear financial goals. Track expenses regularly."
+        },
+        ar: {
+          INTJ: "طور استراتيجية مالية مفصلة طويلة المدى. ابحث عن فرص الاستثمار بشكل منهجي.",
+          INTP: "حلل اتجاهات السوق والنظريات الاقتصادية. أنشئ فرضيات لمصادر دخل متعددة.",
+          // ... add responses for other types
+          DEFAULT: "أنشئ ميزانية وحدد أهدافًا مالية واضحة. تتبع النفقات بانتظام."
+        }
       },
       faith: {
-        en: "Provide specific advice for strengthening faith and spiritual growth",
-        ar: "كيف تقوي إيمانك"
+        en: {
+          INTJ: "Study religious texts analytically. Create a structured spiritual development plan.",
+          INTP: "Explore theological concepts deeply. Engage in philosophical discussions about faith.",
+          // ... add responses for other types
+          DEFAULT: "Develop a consistent spiritual practice. Seek knowledge and understanding."
+        },
+        ar: {
+          INTJ: "ادرس النصوص الدينية بشكل تحليلي. أنشئ خطة منظمة للتطور الروحي.",
+          INTP: "استكشف المفاهيم اللاهوتية بعمق. شارك في المناقشات الفلسفية حول الإيمان.",
+          // ... add responses for other types
+          DEFAULT: "طور ممارسة روحية متسقة. ابحث عن المعرفة والفهم."
+        }
       }
     };
 
-    const prompt = language === 'ar' ? areaPrompts[area].ar : areaPrompts[area].en;
-
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${Deno.env.get('OPENAI_API_KEY')}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          {
-            role: 'system',
-            content: `You are a personality development expert specializing in MBTI personality types. 
-            Your task is to provide specific, actionable advice for a ${personalityType} personality type.
-            Keep responses concise (2-3 sentences) and personalized to their personality type.
-            ${language === 'ar' ? 'Respond in Arabic.' : 'Respond in English.'}`
-          },
-          {
-            role: 'user',
-            content: `Based on the ${personalityType} personality type, ${prompt}`
-          }
-        ],
-      }),
-    });
-
-    const data = await response.json();
-    const analysis = data.choices[0].message.content;
+    // Get the appropriate response based on personality type and area
+    const areaResponses = responses[area]?.[language] ?? {};
+    const analysis = areaResponses[personalityType] ?? areaResponses.DEFAULT;
 
     return new Response(JSON.stringify({ analysis }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -75,7 +100,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in analyze-development-areas function:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: "Failed to generate analysis",
+        details: error.message 
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -83,3 +111,4 @@ serve(async (req) => {
     );
   }
 });
+

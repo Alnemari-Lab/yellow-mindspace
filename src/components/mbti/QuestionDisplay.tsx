@@ -18,10 +18,9 @@ export const QuestionDisplay = ({
   const { language } = useLanguage();
   const displayText = language === 'ar' ? questionTextAr : questionText;
 
-  // Split the text into question and options
-  const parts = displayText.split('\n\n');
-  const mainQuestion = parts[0];
-  const options = parts.slice(1, 3); // Get the two options
+  const options = language === 'ar' 
+    ? ['موافق', 'غير موافق']
+    : ['Agree', 'Disagree'];
 
   return (
     <div className="space-y-8">
@@ -29,7 +28,7 @@ export const QuestionDisplay = ({
         <h2 className="text-xl font-medium mb-2">
           {questionNumber}.
         </h2>
-        <p className="text-lg">{mainQuestion}</p>
+        <p className="text-lg">{displayText}</p>
       </div>
       <div className="space-y-4 max-w-xl mx-auto">
         {options.map((option, index) => (

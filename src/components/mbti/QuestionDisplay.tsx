@@ -3,8 +3,14 @@ import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface QuestionDisplayProps {
-  text: string;
-  options: string[];
+  text: {
+    en: string;
+    ar: string;
+  };
+  options: {
+    en: string[];
+    ar: string[];
+  };
   questionNumber: number;
   onResponse: (response: boolean) => void;
 }
@@ -23,10 +29,10 @@ export const QuestionDisplay = ({
         <h2 className="text-xl font-medium mb-2">
           {questionNumber}.
         </h2>
-        <p className="text-lg">{text}</p>
+        <p className="text-lg">{text[language]}</p>
       </div>
       <div className="space-y-4 max-w-xl mx-auto">
-        {options.map((option, index) => (
+        {options[language].map((option, index) => (
           <button
             key={index}
             onClick={() => onResponse(index === 0)}

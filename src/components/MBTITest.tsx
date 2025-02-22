@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -72,6 +73,7 @@ const MBTITest = () => {
         <QuestionDisplay 
           questionText={currentQuestion.question_text} 
           questionTextAr={currentQuestion.question_text_ar} 
+          questionNumber={currentQuestionIndex + 1}
         />
         <ResponseButtons 
           onResponse={handleResponse} 

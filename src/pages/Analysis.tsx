@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -118,6 +119,53 @@ const Analysis = () => {
     );
   }
 
+  const selfImprovementAreas = {
+    ar: [
+      {
+        title: "تطوير الثقافة",
+        description: "كيف تطور ثقافتك"
+      },
+      {
+        title: "الاهتمام بالصحة",
+        description: "كيف تهتم بصحتك"
+      },
+      {
+        title: "تطوير العلاقات",
+        description: "كيف تطور بعلاقاتك"
+      },
+      {
+        title: "النمو المالي",
+        description: "كيف تنمي مالك"
+      },
+      {
+        title: "تقوية الإيمان",
+        description: "كيف تقوي إيمانك"
+      }
+    ],
+    en: [
+      {
+        title: "Cultural Development",
+        description: "How to develop your cultural awareness"
+      },
+      {
+        title: "Health Care",
+        description: "How to take care of your health"
+      },
+      {
+        title: "Relationship Development",
+        description: "How to improve your relationships"
+      },
+      {
+        title: "Financial Growth",
+        description: "How to grow your wealth"
+      },
+      {
+        title: "Faith Strengthening",
+        description: "How to strengthen your faith"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen hero-gradient">
       <div className="container mx-auto px-4 py-8">
@@ -152,6 +200,24 @@ const Analysis = () => {
                   <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
                     {analysis}
                   </p>
+                </div>
+              </div>
+
+              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
+                <h3 className="text-2xl font-bold text-orange-800 mb-6">
+                  {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {selfImprovementAreas[language].map((area, index) => (
+                    <div key={index} className="bg-white/50 p-6 rounded-lg shadow-sm">
+                      <h4 className="text-xl font-semibold text-orange-800 mb-2">
+                        {area.title}
+                      </h4>
+                      <p className="text-gray-700">
+                        {area.description}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
 

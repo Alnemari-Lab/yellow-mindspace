@@ -29,39 +29,52 @@ const Hero = () => {
     <section className="relative min-h-screen bg-gradient-to-b from-[#fff9e6] to-[#fff5d6]">
       <div className="relative container mx-auto px-4 h-screen flex items-center">
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
-          <div className="w-32 h-32 mx-auto mb-8">
+          <div className="w-40 h-40 mx-auto mb-8">
             <svg viewBox="0 0 200 200" className="w-full h-full">
-              {/* Abstract human head shape */}
+              {/* Main brain shape */}
               <path
-                d="M100,20 
-                   C130,20 150,40 150,70
-                   C150,90 140,110 130,120
-                   C120,130 110,140 100,150
-                   C90,140 80,130 70,120
-                   C60,110 50,90 50,70
-                   C50,40 70,20 100,20"
-                fill="#4B5563"
-                className="opacity-80"
+                d="M100,30 
+                   C140,30 170,60 170,100 
+                   C170,140 140,170 100,170
+                   C60,170 30,140 30,100
+                   C30,60 60,30 100,30"
+                fill="#8B5CF6"
+                className="opacity-20"
               />
-              {/* Abstract shoulders */}
+              {/* Neural network connections */}
               <path
-                d="M60,120
-                   C60,140 80,160 100,160
-                   C120,160 140,140 140,120"
+                d="M70,80 Q100,60 130,80
+                   M70,100 Q100,80 130,100
+                   M70,120 Q100,140 130,120"
                 fill="none"
-                stroke="#4B5563"
-                strokeWidth="3"
-                className="opacity-60"
-              />
-              {/* Abstract facial features */}
-              <circle cx="80" cy="70" r="3" fill="#4B5563" className="opacity-70" />
-              <circle cx="120" cy="70" r="3" fill="#4B5563" className="opacity-70" />
-              <path
-                d="M85,90 C95,100 105,100 115,90"
-                fill="none"
-                stroke="#4B5563"
+                stroke="#8B5CF6"
                 strokeWidth="2"
-                className="opacity-60"
+                className="opacity-40"
+              />
+              {/* Synapse points */}
+              <circle cx="70" cy="80" r="3" fill="#8B5CF6" className="opacity-60" />
+              <circle cx="130" cy="80" r="3" fill="#8B5CF6" className="opacity-60" />
+              <circle cx="70" cy="100" r="3" fill="#8B5CF6" className="opacity-60" />
+              <circle cx="130" cy="100" r="3" fill="#8B5CF6" className="opacity-60" />
+              <circle cx="70" cy="120" r="3" fill="#8B5CF6" className="opacity-60" />
+              <circle cx="130" cy="120" r="3" fill="#8B5CF6" className="opacity-60" />
+              {/* Abstract thought patterns */}
+              <path
+                d="M60,70 Q100,20 140,70
+                   M60,130 Q100,180 140,130"
+                fill="none"
+                stroke="#8B5CF6"
+                strokeWidth="1.5"
+                className="opacity-30"
+              />
+              {/* Central connection lines */}
+              <path
+                d="M100,40 L100,160"
+                fill="none"
+                stroke="#8B5CF6"
+                strokeWidth="1"
+                strokeDasharray="4 4"
+                className="opacity-20"
               />
             </svg>
           </div>

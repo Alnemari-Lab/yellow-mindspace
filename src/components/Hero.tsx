@@ -1,3 +1,4 @@
+
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
@@ -30,63 +31,37 @@ const Hero = () => {
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <div className="w-32 h-32 mx-auto mb-8">
             <svg viewBox="0 0 200 200" className="w-full h-full">
-              {/* Artistic flowing background shape */}
+              {/* Abstract human head shape */}
               <path
                 d="M100,20 
-                   C160,20 190,60 180,100 
-                   C170,140 130,180 100,180 
-                   C70,180 30,140 20,100 
-                   C10,60 40,20 100,20"
-                fill="#F97316"
-                className="opacity-70"
+                   C130,20 150,40 150,70
+                   C150,90 140,110 130,120
+                   C120,130 110,140 100,150
+                   C90,140 80,130 70,120
+                   C60,110 50,90 50,70
+                   C50,40 70,20 100,20"
+                fill="#4B5563"
+                className="opacity-80"
               />
-              {/* Abstract neural pathways */}
+              {/* Abstract shoulders */}
               <path
-                d="M50,70 
-                   Q80,90 60,120 
-                   Q40,150 70,160 
-                   Q100,170 130,160 
-                   Q160,150 140,120 
-                   Q120,90 150,70"
+                d="M60,120
+                   C60,140 80,160 100,160
+                   C120,160 140,140 140,120"
                 fill="none"
-                stroke="#F97316"
-                strokeWidth="2"
-                className="opacity-50"
-              />
-              {/* Artistic swirls */}
-              <path
-                d="M80,40 
-                   Q100,60 90,80 
-                   Q80,100 90,120 
-                   Q100,140 120,120 
-                   Q140,100 130,80 
-                   Q120,60 140,40"
-                fill="none"
-                stroke="#F97316"
+                stroke="#4B5563"
                 strokeWidth="3"
                 className="opacity-60"
               />
-              {/* Abstract neurons */}
-              <circle cx="70" cy="60" r="3" fill="#F97316" className="opacity-80" />
-              <circle cx="130" cy="60" r="3" fill="#F97316" className="opacity-80" />
-              <circle cx="60" cy="100" r="2" fill="#F97316" className="opacity-70" />
-              <circle cx="140" cy="100" r="2" fill="#F97316" className="opacity-70" />
-              <circle cx="80" cy="140" r="3" fill="#F97316" className="opacity-80" />
-              <circle cx="120" cy="140" r="3" fill="#F97316" className="opacity-80" />
-              {/* Decorative elements */}
+              {/* Abstract facial features */}
+              <circle cx="80" cy="70" r="3" fill="#4B5563" className="opacity-70" />
+              <circle cx="120" cy="70" r="3" fill="#4B5563" className="opacity-70" />
               <path
-                d="M90,30 Q100,50 110,30"
+                d="M85,90 C95,100 105,100 115,90"
                 fill="none"
-                stroke="#F97316"
+                stroke="#4B5563"
                 strokeWidth="2"
-                className="opacity-40"
-              />
-              <path
-                d="M80,170 Q100,150 120,170"
-                fill="none"
-                stroke="#F97316"
-                strokeWidth="2"
-                className="opacity-40"
+                className="opacity-60"
               />
             </svg>
           </div>

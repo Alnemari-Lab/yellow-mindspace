@@ -22,13 +22,15 @@ serve(async (req) => {
         en: {
           INTJ: "Focus on systematic learning through structured online courses and documentaries. Create a knowledge acquisition plan.",
           INTP: "Explore philosophical texts and academic research. Join online discussion groups for intellectual discourse.",
-          // ... add responses for other types
+          ENTJ: "Lead cultural initiatives and organize learning groups. Focus on strategic cultural exploration.",
+          ENTP: "Engage in diverse cultural activities. Challenge traditional perspectives through creative exploration.",
           DEFAULT: "Engage in cultural activities that align with your interests. Set specific learning goals."
         },
         ar: {
           INTJ: "ركز على التعلم المنهجي من خلال الدورات عبر الإنترنت والأفلام الوثائقية. قم بإنشاء خطة لاكتساب المعرفة.",
           INTP: "استكشف النصوص الفلسفية والبحث الأكاديمي. انضم إلى مجموعات النقاش عبر الإنترنت للخطاب الفكري.",
-          // ... add responses for other types
+          ENTJ: "قيادة المبادرات الثقافية وتنظيم مجموعات التعلم. التركيز على الاستكشاف الثقافي الاستراتيجي.",
+          ENTP: "المشاركة في الأنشطة الثقافية المتنوعة. تحدي وجهات النظر التقليدية من خلال الاستكشاف الإبداعي.",
           DEFAULT: "شارك في الأنشطة الثقافية التي تتوافق مع اهتماماتك. حدد أهداف تعلم محددة."
         }
       },
@@ -36,13 +38,15 @@ serve(async (req) => {
         en: {
           INTJ: "Create a data-driven fitness plan. Track your progress using health apps and metrics.",
           INTP: "Research evidence-based health practices. Design experiments to optimize your wellness routine.",
-          // ... add responses for other types
+          ENTJ: "Develop a comprehensive health strategy. Set and achieve measurable fitness goals.",
+          ENTP: "Explore innovative health approaches. Mix different exercise styles to maintain interest.",
           DEFAULT: "Develop a consistent exercise routine and maintain a balanced diet."
         },
         ar: {
           INTJ: "قم بإنشاء خطة لياقة بدنية قائمة على البيانات. تتبع تقدمك باستخدام تطبيقات وقياسات الصحة.",
           INTP: "ابحث في ممارسات الصحة المستندة إلى الأدلة. صمم تجارب لتحسين روتين العافية الخاص بك.",
-          // ... add responses for other types
+          ENTJ: "تطوير استراتيجية صحية شاملة. وضع وتحقيق أهداف اللياقة البدنية القابلة للقياس.",
+          ENTP: "استكشف مناهج صحية مبتكرة. مزج أنماط مختلفة من التمارين للحفاظ على الاهتمام.",
           DEFAULT: "طور روتين تمارين منتظم وحافظ على نظام غذائي متوازن."
         }
       },
@@ -50,13 +54,15 @@ serve(async (req) => {
         en: {
           INTJ: "Schedule regular check-ins with important connections. Practice active listening techniques.",
           INTP: "Analyze relationship patterns and work on emotional intelligence. Join group activities.",
-          // ... add responses for other types
+          ENTJ: "Build strategic networks and mentor others. Focus on developing leadership relationships.",
+          ENTP: "Foster diverse social connections. Use creativity to strengthen relationships.",
           DEFAULT: "Invest time in meaningful connections. Practice empathy and active communication."
         },
         ar: {
           INTJ: "جدول مواعيد منتظمة للتواصل مع العلاقات المهمة. مارس تقنيات الاستماع النشط.",
           INTP: "حلل أنماط العلاقات واعمل على الذكاء العاطفي. انضم إلى الأنشطة الجماعية.",
-          // ... add responses for other types
+          ENTJ: "بناء شبكات استراتيجية وتوجيه الآخرين. التركيز على تطوير علاقات القيادة.",
+          ENTP: "تعزيز الروابط الاجتماعية المتنوعة. استخدام الإبداع لتقوية العلاقات.",
           DEFAULT: "استثمر وقتك في العلاقات الهادفة. مارس التعاطف والتواصل النشط."
         }
       },
@@ -64,13 +70,15 @@ serve(async (req) => {
         en: {
           INTJ: "Develop a detailed long-term financial strategy. Research investment opportunities systematically.",
           INTP: "Analyze market trends and economic theories. Create multiple income stream hypotheses.",
-          // ... add responses for other types
+          ENTJ: "Execute ambitious financial plans. Focus on wealth building and business development.",
+          ENTP: "Explore innovative financial opportunities. Develop creative solutions for wealth growth.",
           DEFAULT: "Create a budget and set clear financial goals. Track expenses regularly."
         },
         ar: {
           INTJ: "طور استراتيجية مالية مفصلة طويلة المدى. ابحث عن فرص الاستثمار بشكل منهجي.",
           INTP: "حلل اتجاهات السوق والنظريات الاقتصادية. أنشئ فرضيات لمصادر دخل متعددة.",
-          // ... add responses for other types
+          ENTJ: "تنفيذ خطط مالية طموحة. التركيز على بناء الثروة وتطوير الأعمال.",
+          ENTP: "استكشف الفرص المالية المبتكرة. تطوير حلول إبداعية لنمو الثروة.",
           DEFAULT: "أنشئ ميزانية وحدد أهدافًا مالية واضحة. تتبع النفقات بانتظام."
         }
       },
@@ -78,13 +86,15 @@ serve(async (req) => {
         en: {
           INTJ: "Study religious texts analytically. Create a structured spiritual development plan.",
           INTP: "Explore theological concepts deeply. Engage in philosophical discussions about faith.",
-          // ... add responses for other types
+          ENTJ: "Lead religious study groups. Organize faith-based community initiatives.",
+          ENTP: "Question and explore different aspects of faith. Engage in interfaith dialogue.",
           DEFAULT: "Develop a consistent spiritual practice. Seek knowledge and understanding."
         },
         ar: {
           INTJ: "ادرس النصوص الدينية بشكل تحليلي. أنشئ خطة منظمة للتطور الروحي.",
           INTP: "استكشف المفاهيم اللاهوتية بعمق. شارك في المناقشات الفلسفية حول الإيمان.",
-          // ... add responses for other types
+          ENTJ: "قيادة مجموعات الدراسة الدينية. تنظيم مبادرات مجتمعية قائمة على الإيمان.",
+          ENTP: "اطرح الأسئلة واستكشف جوانب مختلفة من الإيمان. شارك في حوار الأديان.",
           DEFAULT: "طور ممارسة روحية متسقة. ابحث عن المعرفة والفهم."
         }
       }

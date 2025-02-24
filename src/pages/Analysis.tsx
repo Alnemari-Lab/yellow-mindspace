@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -5,6 +6,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import CulturalDevelopment from "@/components/development/CulturalDevelopment";
+import HealthDevelopment from "@/components/development/HealthDevelopment";
+import RelationshipDevelopment from "@/components/development/RelationshipDevelopment";
+import FinancialDevelopment from "@/components/development/FinancialDevelopment";
+import FaithDevelopment from "@/components/development/FaithDevelopment";
 
 interface TypeDetails {
   description_en: string;
@@ -19,29 +25,6 @@ interface DevelopmentArea {
   explanation_ar: string;
 }
 
-const developmentAreaTitles = {
-  cultural: {
-    en: "How to develop your culture",
-    ar: "كيف تطور ثقافتك"
-  },
-  health: {
-    en: "How to care for your health",
-    ar: "كيف تهتم بصحتك"
-  },
-  relationships: {
-    en: "How to develop your relationships",
-    ar: "كيف تطور بعلاقاتك"
-  },
-  financial: {
-    en: "How to grow your wealth",
-    ar: "كيف تنمي مالك"
-  },
-  faith: {
-    en: "How to strengthen your faith",
-    ar: "كيف تقوي إيمانك"
-  }
-};
-
 const Analysis = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -51,7 +34,6 @@ const Analysis = () => {
   const [personalityType, setPersonalityType] = useState<string | null>(null);
   const [typeDetails, setTypeDetails] = useState<TypeDetails | null>(null);
   const [developmentAreas, setDevelopmentAreas] = useState<DevelopmentArea[]>([]);
-  const [areaAnalyses, setAreaAnalyses] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchAnalysis = async () => {
@@ -113,28 +95,7 @@ const Analysis = () => {
 
         if (areasResponse.data) {
           setDevelopmentAreas(areasResponse.data);
-          
-          const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-development-areas', {
-            body: {
-              personalityType: mbtiData.type_result,
-              areas: Object.keys(developmentAreaTitles),
-              language
-            },
-          });
-          
-          if (analysisError) throw analysisError;
-          setAreaAnalyses(analysisData || {});
         }
-
-        const { data: aiData, error: aiError } = await supabase.functions.invoke('analyze-personality', {
-          body: {
-            personalityType: mbtiData.type_result,
-            language
-          },
-        });
-
-        if (aiError) throw aiError;
-        setAnalysis(aiData.analysis);
 
       } catch (error) {
         console.error('Error fetching analysis:', error);
@@ -168,8 +129,6 @@ const Analysis = () => {
     );
   }
 
-  const areaLabels = developmentAreaTitles;
-
   return (
     <div className="min-h-screen hero-gradient">
       <div className="container mx-auto px-4 py-8">
@@ -184,155 +143,22 @@ const Analysis = () => {
 
         <div className="max-w-4xl mx-auto space-y-8">
           {personalityType && (
-            <div className="text-center bg-white/50 rounded-lg p-8 shadow-sm">
-              <h2 className="text-4xl font-bold text-orange-800 mb-2">
-                {language === 'en' ? 'Personality Type' : 'نوع الشخصية'}
-              </h2>
-              <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
-                {personalityType}
-              </p>
-            </div>
-          )}
-
-          {typeDetails && (
             <>
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'AI Personality Analysis' : 'تحليل الشخصية بالذكاء الاصطناعي'}
-                </h3>
-                <div className="prose prose-orange max-w-none">
-                  <p className="text-lg leading-relaxed text-gray-700 whitespace-pre-line">
-                    {analysis}
-                  </p>
-                </div>
+              <div className="text-center bg-white/50 rounded-lg p-8 shadow-sm">
+                <h2 className="text-4xl font-bold text-orange-800 mb-2">
+                  {language === 'en' ? 'Personality Type' : 'نوع الشخصية'}
+                </h2>
+                <p className="text-5xl font-black bg-gradient-to-r from-orange-600 to-yellow-600 text-transparent bg-clip-text">
+                  {personalityType}
+                </p>
               </div>
 
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Key Strengths' : 'نقاط القوة الرئيسية'}
-                </h3>
-                <div className="text-lg leading-relaxed text-gray-700">
-                  <ul className="list-disc pl-6 space-y-2">
-                    {language === 'en' ? (
-                      <>
-                        <li>Strong analytical and problem-solving abilities</li>
-                        <li>Natural leadership qualities</li>
-                        <li>Excellent communication skills</li>
-                        <li>Creative thinking and innovation</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>قدرات تحليلية وحل المشكلات قوية</li>
-                        <li>صفات قيادية طبيعية</li>
-                        <li>مهارات تواصل ممتازة</li>
-                        <li>التفكير الإبداعي والابتكار</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Areas to Improve' : 'مجالات للتحسين'}
-                </h3>
-                <div className="text-lg leading-relaxed text-gray-700">
-                  <ul className="list-disc pl-6 space-y-2">
-                    {language === 'en' ? (
-                      <>
-                        <li>Time management and organization</li>
-                        <li>Emotional intelligence and empathy</li>
-                        <li>Stress management</li>
-                        <li>Active listening skills</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>إدارة الوقت والتنظيم</li>
-                        <li>الذكاء العاطفي والتعاطف</li>
-                        <li>إدارة التوتر</li>
-                        <li>مهارات الاستماع النشط</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Personal Development Tips' : 'نصائح للتطوير الشخصي'}
-                </h3>
-                <div className="text-lg leading-relaxed text-gray-700">
-                  <ul className="list-disc pl-6 space-y-2">
-                    {language === 'en' ? (
-                      <>
-                        <li>Practice mindfulness and self-reflection daily</li>
-                        <li>Set clear goals and create action plans</li>
-                        <li>Seek feedback from peers and mentors</li>
-                        <li>Engage in continuous learning</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>ممارسة اليقظة الذهنية والتأمل الذاتي يومياً</li>
-                        <li>وضع أهداف واضحة وإنشاء خطط عمل</li>
-                        <li>طلب التغذية الراجعة من الزملاء والموجهين</li>
-                        <li>المشاركة في التعلم المستمر</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Social Interaction Style' : 'نمط التفاعل الاجتماعي'}
-                </h3>
-                <div className="text-lg leading-relaxed text-gray-700">
-                  <p className="mb-4">
-                    {language === 'en' 
-                      ? `As a ${personalityType}, your social interaction style is characterized by:`
-                      : `كشخصية من نوع ${personalityType}، يتميز أسلوب تفاعلك الاجتماعي بـ:`
-                    }
-                  </p>
-                  <ul className="list-disc pl-6 space-y-2">
-                    {language === 'en' ? (
-                      <>
-                        <li>Preference for meaningful one-on-one conversations</li>
-                        <li>Strong ability to read social cues</li>
-                        <li>Natural networking abilities</li>
-                        <li>Diplomatic communication style</li>
-                      </>
-                    ) : (
-                      <>
-                        <li>تفضيل المحادثات الهادفة وجهاً لوجه</li>
-                        <li>قدرة قوية على قراءة الإشارات الاجتماعية</li>
-                        <li>قدرات طبيعية في التواصل الشبكي</li>
-                        <li>أسلوب تواصل دبلوماسي</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-
-              <div className="bg-white/70 rounded-xl p-8 shadow-lg">
-                <h3 className="text-2xl font-bold text-orange-800 mb-6">
-                  {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {Object.entries(areaLabels).map(([key, labels]) => (
-                    <div key={key} className="bg-white/50 p-6 rounded-lg shadow-sm">
-                      <h4 className="text-xl font-semibold text-orange-800 mb-2">
-                        {language === 'en' ? labels.en : labels.ar}
-                      </h4>
-                      <div className="mt-4 pt-4 border-t border-gray-200">
-                        <p className="text-gray-700">
-                          {areaAnalyses[key] || (language === 'en' 
-                            ? 'Generating personalized insights...' 
-                            : 'جاري إنشاء الرؤى الشخصية...')}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+              <div className="grid gap-8">
+                <CulturalDevelopment personalityType={personalityType} />
+                <HealthDevelopment personalityType={personalityType} />
+                <RelationshipDevelopment personalityType={personalityType} />
+                <FinancialDevelopment personalityType={personalityType} />
+                <FaithDevelopment personalityType={personalityType} />
               </div>
             </>
           )}

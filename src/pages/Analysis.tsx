@@ -19,6 +19,29 @@ interface DevelopmentArea {
   explanation_ar: string;
 }
 
+const developmentAreaTitles = {
+  cultural: {
+    en: "How to develop your culture",
+    ar: "كيف تطور ثقافتك"
+  },
+  health: {
+    en: "How to care for your health",
+    ar: "كيف تهتم بصحتك"
+  },
+  relationships: {
+    en: "How to develop your relationships",
+    ar: "كيف تطور بعلاقاتك"
+  },
+  financial: {
+    en: "How to grow your wealth",
+    ar: "كيف تنمي مالك"
+  },
+  faith: {
+    en: "How to strengthen your faith",
+    ar: "كيف تقوي إيمانك"
+  }
+};
+
 const Analysis = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -91,29 +114,16 @@ const Analysis = () => {
         if (areasResponse.data) {
           setDevelopmentAreas(areasResponse.data);
           
-          const analyses: Record<string, string> = {};
-          await Promise.all(
-            areasResponse.data.map(async (area) => {
-              try {
-                const { data, error } = await supabase.functions.invoke('analyze-development-areas', {
-                  body: {
-                    personalityType: mbtiData.type_result,
-                    area: area.area_key,
-                    language
-                  },
-                });
-                
-                if (error) throw error;
-                analyses[area.area_key] = data.analysis;
-              } catch (e) {
-                console.error(`Error generating analysis for ${area.area_key}:`, e);
-                analyses[area.area_key] = language === 'en' 
-                  ? "Unable to generate analysis at this time."
-                  : "غير قادر على إنشاء التحليل في هذا الوقت.";
-              }
-            })
-          );
-          setAreaAnalyses(analyses);
+          const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-development-areas', {
+            body: {
+              personalityType: mbtiData.type_result,
+              areas: Object.keys(developmentAreaTitles),
+              language
+            },
+          });
+          
+          if (analysisError) throw analysisError;
+          setAreaAnalyses(analysisData || {});
         }
 
         const { data: aiData, error: aiError } = await supabase.functions.invoke('analyze-personality', {
@@ -158,28 +168,7 @@ const Analysis = () => {
     );
   }
 
-  const areaLabels = {
-    cultural: {
-      en: "Cultural Development",
-      ar: "تطوير الثقافة"
-    },
-    health: {
-      en: "Health Care",
-      ar: "الاهتمام بالصحة"
-    },
-    relationships: {
-      en: "Relationship Development",
-      ar: "تطوير العلاقات"
-    },
-    financial: {
-      en: "Financial Growth",
-      ar: "النمو المالي"
-    },
-    faith: {
-      en: "Faith Strengthening",
-      ar: "تقوية الإيمان"
-    }
-  };
+  const areaLabels = developmentAreaTitles;
 
   return (
     <div className="min-h-screen hero-gradient">
@@ -329,17 +318,14 @@ const Analysis = () => {
                   {language === 'en' ? 'Development Areas' : 'مجالات التطوير'}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {developmentAreas.map((area) => (
-                    <div key={area.area_key} className="bg-white/50 p-6 rounded-lg shadow-sm">
+                  {Object.entries(areaLabels).map(([key, labels]) => (
+                    <div key={key} className="bg-white/50 p-6 rounded-lg shadow-sm">
                       <h4 className="text-xl font-semibold text-orange-800 mb-2">
-                        {areaLabels[area.area_key]?.[language]}
+                        {language === 'en' ? labels.en : labels.ar}
                       </h4>
-                      <p className="text-gray-700 mb-4">
-                        {language === 'en' ? area.explanation_en : area.explanation_ar}
-                      </p>
                       <div className="mt-4 pt-4 border-t border-gray-200">
-                        <p className="text-gray-700 italic">
-                          {areaAnalyses[area.area_key] || (language === 'en' 
+                        <p className="text-gray-700">
+                          {areaAnalyses[key] || (language === 'en' 
                             ? 'Generating personalized insights...' 
                             : 'جاري إنشاء الرؤى الشخصية...')}
                         </p>

@@ -31,51 +31,73 @@ const Hero = () => {
         <div className="max-w-3xl mx-auto text-center relative z-10" dir={language === 'ar' ? 'rtl' : 'ltr'}>
           <div className="w-40 h-40 mx-auto mb-8">
             <svg viewBox="0 0 200 200" className="w-full h-full">
-              {/* Main brain shape */}
-              <path
-                d="M100,30 
-                   C140,30 170,60 170,100 
-                   C170,140 140,170 100,170
-                   C60,170 30,140 30,100
-                   C30,60 60,30 100,30"
-                fill="#8B5CF6"
-                className="opacity-20"
+              {/* Main circular network */}
+              <circle 
+                cx="100" 
+                cy="100" 
+                r="70" 
+                fill="none" 
+                stroke="#F97316" 
+                strokeWidth="1" 
+                className="opacity-20" 
               />
-              {/* Neural network connections */}
+              
+              {/* Neural network nodes */}
+              <circle cx="100" cy="50" r="4" fill="#F97316" className="opacity-70" />
+              <circle cx="150" cy="100" r="4" fill="#F97316" className="opacity-70" />
+              <circle cx="100" cy="150" r="4" fill="#F97316" className="opacity-70" />
+              <circle cx="50" cy="100" r="4" fill="#F97316" className="opacity-70" />
+              <circle cx="100" cy="100" r="6" fill="#F97316" className="opacity-90" />
+
+              {/* Connection lines */}
               <path
-                d="M70,80 Q100,60 130,80
-                   M70,100 Q100,80 130,100
-                   M70,120 Q100,140 130,120"
+                d="M100,50 Q130,75 150,100
+                   M150,100 Q130,125 100,150
+                   M100,150 Q70,125 50,100
+                   M50,100 Q70,75 100,50"
                 fill="none"
-                stroke="#8B5CF6"
-                strokeWidth="2"
+                stroke="#F97316"
+                strokeWidth="1.5"
                 className="opacity-40"
               />
-              {/* Synapse points */}
-              <circle cx="70" cy="80" r="3" fill="#8B5CF6" className="opacity-60" />
-              <circle cx="130" cy="80" r="3" fill="#8B5CF6" className="opacity-60" />
-              <circle cx="70" cy="100" r="3" fill="#8B5CF6" className="opacity-60" />
-              <circle cx="130" cy="100" r="3" fill="#8B5CF6" className="opacity-60" />
-              <circle cx="70" cy="120" r="3" fill="#8B5CF6" className="opacity-60" />
-              <circle cx="130" cy="120" r="3" fill="#8B5CF6" className="opacity-60" />
-              {/* Abstract thought patterns */}
+
+              {/* Inner connections */}
               <path
-                d="M60,70 Q100,20 140,70
-                   M60,130 Q100,180 140,130"
+                d="M100,50 L100,100
+                   M150,100 L100,100
+                   M100,150 L100,100
+                   M50,100 L100,100"
                 fill="none"
-                stroke="#8B5CF6"
-                strokeWidth="1.5"
+                stroke="#F97316"
+                strokeWidth="1"
                 className="opacity-30"
               />
-              {/* Central connection lines */}
-              <path
-                d="M100,40 L100,160"
-                fill="none"
-                stroke="#8B5CF6"
-                strokeWidth="1"
-                strokeDasharray="4 4"
-                className="opacity-20"
+
+              {/* Decorative pulses */}
+              <circle 
+                cx="100" 
+                cy="100" 
+                r="40" 
+                fill="none" 
+                stroke="#F97316" 
+                strokeWidth="0.5" 
+                className="opacity-20" 
               />
+              <circle 
+                cx="100" 
+                cy="100" 
+                r="55" 
+                fill="none" 
+                stroke="#F97316" 
+                strokeWidth="0.5" 
+                className="opacity-15" 
+              />
+
+              {/* Dynamic connection points */}
+              <circle cx="115" cy="75" r="2" fill="#F97316" className="opacity-60" />
+              <circle cx="125" cy="125" r="2" fill="#F97316" className="opacity-60" />
+              <circle cx="75" cy="125" r="2" fill="#F97316" className="opacity-60" />
+              <circle cx="85" cy="75" r="2" fill="#F97316" className="opacity-60" />
             </svg>
           </div>
           <h1 className="text-7xl font-bold mb-6 text-gray-900 tracking-tight">
